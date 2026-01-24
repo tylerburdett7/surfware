@@ -1,0 +1,59 @@
+# =========================
+# Node / Electron
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Electron build output
+dist/
+out/
+release/
+build/
+
+# Electron cache
+.electron/
+.cache/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+venv/
+ENV/
+.venv/
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Runtime data (optional)
+# =========================
+data/
+*.tmp
+
+# =========================
+# Packaging artifacts
+# =========================
+*.exe
+*.dmg
+*.AppImage
+*.zip
