@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Centurion Ri245 UI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LEFT SCREEN -->
+  <section class="screen info-screen">
+
+    <img src="centurionlogo.png" alt="Centurion Logo" class="screen-logo">
+
+    <div class="top-time">12:42 PM</div>
+
+    <div class="diagnostics-bar">
+      <div class="diagnostic-item">
+        <span>Oil</span>
+        <strong>52 PSI</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Temp</span>
+        <strong>165°</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Depth</span>
+        <strong>18.4 ft</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Battery</span>
+        <strong>12.6 V</strong>
+      </div>
+    </div>
+
+    <div class="gauges">
+
+      <!-- FUEL -->
+      <div class="gauge">
+        <div class="gauge-label">FUEL</div>
+        <div class="gauge-value">68 <span>%</span></div>
+        <div class="meter">
+          <div class="meter-track">
+            <div class="meter-fill fuel-fill" style="width: 68%;"></div>
+            <div class="meter-ticks">
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+            </div>
+          </div>
+          <div class="meter-labels">
+            <span>E</span>
+            <span>½</span>
+            <span>F</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPEED -->
+      <div class="gauge">
+        <div class="gauge-label">SPEED</div>
+        <div class="gauge-value">11.2 <span>MPH</span></div>
+        <div class="meter">
+          <div class="meter-track">
+            <div class="meter-fill speed-fill" style="width: 18.7%;"></div>
+            <div class="meter-ticks">
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+            </div>
+          </div>
+          <div class="meter-labels">
+            <span>0</span>
+            <span>15</span>
+            <span>30</span>
+            <span>45</span>
+            <span>60</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RPM -->
+      <div class="gauge">
+        <div class="gauge-label">RPM</div>
+        <div class="gauge-value">3450 <span>RPM</span></div>
+        <div class="meter">
+          <div class="meter-track">
+            <div class="meter-fill rpm-fill" style="width: 43.1%;"></div>
+            <div class="meter-ticks">
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+            </div>
+          </div>
+          <div class="meter-labels">
+            <span>0</span>
+            <span>2k</span>
+            <span>4k</span>
+            <span>6k</span>
+            <span>8k</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-panels">
+
+      <div class="info-box cruise-box">
+        <div class="cruise-header">
+          <span class="cruise-title">Cruise</span>
+          <div class="toggle on"><div class="knob"></div></div>
+        </div>
+
+        <div class="set-speed">
+          <button>▲</button>
+          <div class="set-value">
+            <span class="set-label">SET</span>
+            11.5 <span>MPH</span>
+          </div>
+          <button>▼</button>
+        </div>
+      </div>
+
+      <div class="info-box media-box">
+        <span>🎵 Taylor Swift — 22</span>
+        <div class="media-controls">
+          <button>⏮</button>
+          <button>⏯</button>
+          <button>⏭</button>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- RIGHT SCREEN -->
+  <section class="screen control-screen">
+
+    <div class="camera-view">LIVE CAMERA</div>
+
+    <div class="tab-indicators">
+      <div class="tab-box">
+        <div class="tab-label">Center Tab</div>
+        <div class="tab-value">35%</div>
+      </div>
+      <div class="tab-box">
+        <div class="tab-label">QuickSurf</div>
+        <div class="tab-value">LEFT</div>
+      </div>
+      <div class="tab-box">
+        <div class="tab-label">QuickLaunch</div>
+        <div class="tab-value">OFF</div>
+      </div>
+    </div>
+
+    <div class="right-layout">
+      <div class="menu-buttons">
+        <button>Ballast</button>
+        <button>Surf</button>
+        <button>Switches</button>
+        <button>Profiles</button>
+        <button>Music</button>
+        <button>Settings</button>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+</body>
+</html>
