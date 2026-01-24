@@ -1,13 +1,13 @@
 {
   "name": "surfware",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Wake boat control system prototype",
+  "main": "electron/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Tyler Burdett",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
