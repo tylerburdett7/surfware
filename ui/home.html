@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Centurion Ri245 UI</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="home.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LEFT SCREEN -->
+  <section class="screen info-screen">
+
+    <img src="images/centurionlogo.png" alt="Centurion Logo" class="screen-logo">
+
+    <div class="top-time">12:42 PM</div>
+
+    <div class="gauges">
+
+      <!-- FUEL -->
+      <div class="gauge">
+        <div class="gauge-label">FUEL</div>
+        <div class="gauge-value">68 <span>%</span></div>
+        <div class="meter">
+          <div class="meter-track">
+            <div class="meter-fill fuel-fill" style="width: 68%;"></div>
+            <div class="meter-ticks">
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+            </div>
+          </div>
+          <div class="meter-labels">
+            <span>E</span>
+            <span>½</span>
+            <span>F</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPEED -->
+      <div class="gauge speed-gauge">
+        <div class="gauge-label">SPEED</div>
+        <div class="speed-value-with-cruise">
+          <div class="gauge-value">11.2 <span>MPH</span></div>
+          <div class="cruise-toggle-wrapper">
+            <button class="cruise-button" onclick="toggleCruise(event)">CRUISE</button>
+          </div>
+        </div>
+        <div class="cruise-controls hidden">
+          <button class="cruise-btn">▲</button>
+          <div class="cruise-set-value">
+            <span>11.5</span>
+          </div>
+          <button class="cruise-btn">▼</button>
+        </div>
+        <div class="meter">
+          <div class="meter-track">
+            <div class="meter-fill speed-fill" style="width: 18.7%;"></div>
+            <div class="meter-ticks">
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+            </div>
+          </div>
+          <div class="meter-labels">
+            <span>0</span>
+            <span>15</span>
+            <span>30</span>
+            <span>45</span>
+            <span>60</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RPM -->
+      <div class="gauge">
+        <div class="gauge-label">RPM</div>
+        <div class="gauge-value">3450 <span>RPM</span></div>
+        <div class="meter">
+          <div class="meter-track">
+            <div class="meter-fill rpm-fill" style="width: 43.1%;"></div>
+            <div class="meter-ticks">
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+              <div class="tick"></div>
+            </div>
+          </div>
+          <div class="meter-labels">
+            <span>0</span>
+            <span>2k</span>
+            <span>4k</span>
+            <span>6k</span>
+            <span>8k</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-panels">
+
+      <div class="tab-indicators">
+        <div class="tab-box">
+          <div class="tab-label">Center Tab</div>
+          <div class="tab-value">35%</div>
+        </div>
+        <div class="tab-box">
+          <div class="tab-label">QuickSurf</div>
+          <div class="tab-value">LEFT</div>
+        </div>
+        <div class="tab-box">
+          <div class="tab-label">QuickLaunch</div>
+          <div class="tab-value">OFF</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="diagnostics-bar">
+      <div class="diagnostic-item">
+        <span>Depth</span>
+        <strong>18.4 ft</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Water Temp</span>
+        <strong>72°</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Oil Pressure</span>
+        <strong>52 PSI</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Engine Temp</span>
+        <strong>165°</strong>
+      </div>
+      <div class="diagnostic-item">
+        <span>Battery</span>
+        <strong>12.6 V</strong>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RIGHT SCREEN -->
+  <section class="screen control-screen">
+
+    <div class="camera-view">LIVE CAMERA</div>
+
+    <div class="bottom-right-boxes">
+      <div class="info-box media-box">
+        <div class="media-top">
+          <img class="album-art" src="images/album-art.webp" alt="Album Art">
+          <div class="media-info">
+            <div class="song-title">Slipfast</div>
+            <div class="song-artist">Role Model</div>
+            <div class="media-controls">
+              <button>⏮</button>
+              <button>⏯</button>
+              <button>⏭</button>
+            </div>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="info-box volume-box">
+        <img class="volume-icon" src="images/audio-icon.png" alt="volume" onclick="toggleMute()">
+        <input type="range" class="volume-slider" min="0" max="100" value="70" orient="vertical">
+      </div>
+
+      <div class="info-box trip-info-box">
+        <button class="reset-button">RESET</button>
+        <div class="trip-info-item">
+          <span>Trip Time</span>
+          <strong>2:45</strong>
+        </div>
+        <div class="trip-info-item">
+          <span>Fuel Avg</span>
+          <strong>12.5 mpg</strong>
+        </div>
+        <div class="trip-info-item">
+          <span>Fuel Used</span>
+          <strong>3.2 gal</strong>
+        </div>
+        <div class="trip-info-item">
+          <span>Trip Distance</span>
+          <strong>40.0 mi</strong>
+        </div>
+        <div class="trip-info-item">
+          <span>Fuel Rate</span>
+          <strong>8.5 gph</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-layout">
+      <div class="menu-buttons">
+        <button>Ballast</button>
+        <button>Surf</button>
+        <button>Switches</button>
+        <button>Profiles</button>
+        <button>Music</button>
+        <button>Settings</button>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+</body>
+</html>
