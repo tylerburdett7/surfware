@@ -1,0 +1,43 @@
+<div id="ballast-overlay" class="ballast-overlay">
+  <!-- Ramfill Status - Top Left -->
+  <div class="ramfill-status">
+    Ramfill status: <span class="status-text">increase speed</span>
+  </div>
+  
+  <div class="ballast-controls">
+    <button class="ballast-action fill-all">▲<br>FILL ALL</button>
+    <button class="ballast-action stop-all">⏹<br>STOP ALL</button>
+    <button class="ballast-action drain-all">▼<br>DRAIN ALL</button>
+  </div>
+  
+  <!-- Trailer Mode Button - Bottom Right -->
+  <button class="ballast-action trailer-mode-btn">TRAILER<br>MODE</button>
+  <div class="boat-wrapper" id="boat-wrapper">
+    <img src="../images/overhead-view.png" alt="Boat Top View" />
+    
+    <!-- Ballast zones -->
+    <div class="ballast tank-bow" onclick="selectTank('Bow', event)">25</div>
+    <div class="ballast tank-center" onclick="selectTank('Center', event)">25</div>
+    <div class="ballast tank-ramfill-port" onclick="selectTank('Ramfill Port', event)">25</div>
+    <div class="ballast tank-ramfill-stbd" onclick="selectTank('Ramfill Starboard', event)">25</div>
+    <div class="ballast tank-port-pnp" onclick="selectTank('Port PNP', event)">25</div>
+    <div class="ballast tank-stbd-pnp" onclick="selectTank('Starboard PNP', event)">25</div>
+    <div class="ballast tank-transom" onclick="selectTank('Transom', event)">25</div>
+  </div>
+  <div class="tank-control-panel" id="tank-control-panel">
+    <div class="tank-panel-header" id="tank-panel-name">Tank Name</div>
+    <button class="tank-panel-btn fill-btn">▲ FILL</button>
+    <button class="tank-panel-btn stop-btn">⏹ STOP</button>
+    <button class="tank-panel-btn drain-btn">▼ DRAIN</button>
+  </div>
+  
+  <!-- Side menu buttons -->
+  <div class="menu-buttons fixed-menu">
+    <button onclick="closeBallast()">Home</button>
+    <button>Surf</button>
+    <button>Switches</button>
+    <button>Profiles</button>
+    <button>Music</button>
+    <button>Settings</button>
+  </div>
+</div>

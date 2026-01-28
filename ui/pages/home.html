@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Centurion Ri245 UI</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="home.js"></script>
+  <link rel="stylesheet" href="../styles.css">
+  <script src="../home.js"></script>
+  <script src="../js/ballast.js"></script>
 </head>
 <body>
 
@@ -13,7 +14,7 @@
   <!-- LEFT SCREEN -->
   <section class="screen info-screen">
 
-    <img src="images/centurionlogo.png" alt="Centurion Logo" class="screen-logo">
+    <img src="../images/centurionlogo.png" alt="Centurion Logo" class="screen-logo">
 
     <div class="top-time">12:42 PM</div>
 
@@ -156,7 +157,7 @@
     <div class="bottom-right-boxes">
       <div class="info-box media-box">
         <div class="media-top">
-          <img class="album-art" src="images/album-art.webp" alt="Album Art">
+          <img class="album-art" src="../images/album-art.webp" alt="Album Art">
           <div class="media-info">
             <div class="song-title">Slipfast</div>
             <div class="song-artist">Role Model</div>
@@ -173,7 +174,7 @@
       </div>
 
       <div class="info-box volume-box">
-        <img class="volume-icon" src="images/audio-icon.png" alt="volume" onclick="toggleMute()">
+        <img class="volume-icon" src="../images/audio-icon.png" alt="volume" onclick="toggleMute()">
         <input type="range" class="volume-slider" min="0" max="100" value="70" orient="vertical">
       </div>
 
@@ -204,7 +205,7 @@
 
     <div class="right-layout">
       <div class="menu-buttons">
-        <button>Ballast</button>
+        <button onclick="openBallast()">Ballast</button>
         <button>Surf</button>
         <button>Switches</button>
         <button>Profiles</button>
@@ -212,6 +213,9 @@
         <button>Settings</button>
       </div>
     </div>
+
+    <!-- Ballast overlay content loaded from ballast.html -->
+    <div id="ballast-container"></div>
 
   </section>
 

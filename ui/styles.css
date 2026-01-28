@@ -10,12 +10,14 @@ body {
   justify-content: center;
   padding: 24px;
   color: white;
+  overflow-y: scroll;
 }
 
 /* APP */
 .app {
   display: flex;
   gap: 24px;
+  overflow: hidden;
 }
 
 /* SCREENS */
@@ -28,6 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
 }
 
 .info-screen {
@@ -675,6 +678,18 @@ body {
   flex: 1;
 }
 
+.menu-buttons.fixed-menu {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 85px;
+  z-index: 25;
+  justify-content: space-around;
+  height: 300px;
+  flex: unset;
+}
+
 .menu-buttons button {
   background: linear-gradient(135deg, #c41e1e, #8b1818);
   border: none;
@@ -692,3 +707,280 @@ body {
   background: linear-gradient(135deg, #d42e2e, #9b2828);
   transform: scale(1.02);
 }
+
+/* BALLAST OVERLAY */
+.ballast-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  border-radius: 26px;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.boat-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease;
+}
+
+.boat-wrapper.shifted {
+  transform: translateX(-90px);
+}
+
+.boat-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  z-index: 1;
+}
+
+.ballast {
+  position: absolute;
+  border: 2px solid rgba(212, 165, 51, 0.6);
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.ballast:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(212, 165, 51, 1);
+}
+
+/* Position each tank using percentages */
+.tank-bow {
+  top: 8%;
+  left: 45%;
+  width: 10%;
+  height: 12%;
+}
+
+.tank-center {
+  top: 28%;
+  left: 45%;
+  width: 10%;
+  height: 18%;
+}
+
+.tank-ramfill-port {
+  top: 46%;
+  left: 40%;
+  width: 7%;
+  height: 30%;
+}
+
+.tank-ramfill-stbd {
+  top: 46%;
+  right: 40%;
+  width: 7%;
+  height: 30%;
+}
+
+.tank-port-pnp {
+  bottom: 13%;
+  left: 42%;
+  width: 7%;
+  height: 10%;
+}
+
+.tank-stbd-pnp {
+  bottom: 13%;
+  right: 42%;
+  width: 7%;
+  height: 10%;
+}
+
+.tank-transom {
+  bottom: 1%;
+  left: 42.3%;
+  width: 15%;
+  height: 10%;
+}
+
+.close-ballast {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: 1px solid rgba(212, 165, 51, 0.4);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+.close-ballast:hover {
+  background: rgba(212, 165, 51, 0.1);
+  border-color: rgba(212, 165, 51, 0.8);
+}
+
+.ballast-controls {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 20;
+}
+
+.ballast-action {
+  background: linear-gradient(135deg, #d4a533, #e5b847);
+  border: none;
+  border-radius: 6px;
+  color: black;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 60px;
+}
+
+.ballast-action:hover {
+  background: linear-gradient(135deg, #e5b847, #f5c857);
+  transform: scale(1.05);
+}
+
+.ballast-action.trailer-mode {
+  padding: 6px 10px;
+  font-size: 9px;
+  min-width: 50px;
+}
+
+.trailer-mode-btn {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  background: linear-gradient(135deg, #d4a533, #e5b847);
+  border: none;
+  border-radius: 6px;
+  color: black;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  z-index: 20;
+}
+
+.trailer-mode-btn:hover {
+  background: linear-gradient(135deg, #e5b847, #f5c857);
+  transform: scale(1.05);
+}
+
+.ramfill-status {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 20;
+}
+
+.ramfill-status .status-text {
+  color: #c41e1e;
+  font-weight: 600;
+}
+
+.tank-control-panel {
+  position: absolute;
+  right: 150px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 20;
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(212, 165, 51, 0.4);
+  border-radius: 12px;
+  padding: 16px;
+  width: 140px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.tank-control-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 1s ease;
+}
+
+.tank-panel-header {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  border-bottom: 1px solid rgba(212, 165, 51, 0.3);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.tank-panel-btn {
+  background: linear-gradient(135deg, #d4a533, #e5b847);
+  border: none;
+  border-radius: 6px;
+  color: black;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.tank-panel-btn:hover {
+  background: linear-gradient(135deg, #e5b847, #f5c857);
+  transform: scale(1.05);
+}
+
+.back-btn {
+  background: rgba(212, 165, 51, 0.3);
+  color: white;
+  margin-top: 8px;
+}
+
+.ballast-action:hover {
+  background: linear-gradient(135deg, #e5b847, #f5c857);
+  transform: scale(1.05);
+}
+
+

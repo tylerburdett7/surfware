@@ -18,11 +18,11 @@ function toggleMute() {
   isMuted = !isMuted;
   
   if (isMuted) {
-    icon.src = 'images/audio-mute-icon.png';
+    icon.src = '../images/audio-mute-icon.png';
     icon.classList.add('muted');
     slider.classList.add('muted');
   } else {
-    icon.src = 'images/audio-icon.png';
+    icon.src = '../images/audio-icon.png';
     icon.classList.remove('muted');
     slider.classList.remove('muted');
   }
@@ -33,8 +33,23 @@ document.querySelector('.volume-slider').addEventListener('input', function() {
     isMuted = false;
     const icon = document.querySelector('.volume-icon');
     const slider = document.querySelector('.volume-slider');
-    icon.src = 'images/audio-icon.png';
+    icon.src = '../images/audio-icon.png';
     icon.classList.remove('muted');
     slider.classList.remove('muted');
   }
 });
+
+function openBallast() {
+  const overlay = document.getElementById('ballast-overlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+  }
+}
+
+function closeBallast() {
+  const overlay = document.getElementById('ballast-overlay');
+  if (overlay) {
+    overlay.style.display = 'none';
+  }
+  deselectTank();
+}
