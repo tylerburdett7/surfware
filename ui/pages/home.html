@@ -178,27 +178,69 @@
         <input type="range" class="volume-slider" min="0" max="100" value="70" orient="vertical">
       </div>
 
-      <div class="info-box trip-info-box">
-        <button class="reset-button">RESET</button>
-        <div class="trip-info-item">
-          <span>Trip Time</span>
-          <strong>2:45</strong>
+      <div class="info-box trip-info-box" id="trip-carousel">
+        <div class="carousel-inner">
+          <!-- Slide 1: Trip Data -->
+          <div class="carousel-slide trip-data-slide active">
+            <button class="reset-button">RESET</button>
+            <div class="trip-info-item">
+              <span>Trip Time</span>
+              <strong>2:45</strong>
+            </div>
+            <div class="trip-info-item">
+              <span>Fuel Avg</span>
+              <strong>12.5 mpg</strong>
+            </div>
+            <div class="trip-info-item">
+              <span>Fuel Used</span>
+              <strong>3.2 gal</strong>
+            </div>
+            <div class="trip-info-item">
+              <span>Trip Distance</span>
+              <strong>40.0 mi</strong>
+            </div>
+            <div class="trip-info-item">
+              <span>Fuel Rate</span>
+              <strong>8.5 gph</strong>
+            </div>
+          </div>
+          <!-- Slide 2: Ballast Levels -->
+          <div class="carousel-slide ballast-data-slide">
+            <div class="ballast-grid">
+              <div class="ballast-item">
+                <div class="ballast-name">Ramfill P</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+              <div class="ballast-item">
+                <div class="ballast-name">Ramfill S</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+              <div class="ballast-item">
+                <div class="ballast-name">Transom</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+              <div class="ballast-item">
+                <div class="ballast-name">Center</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+              <div class="ballast-item">
+                <div class="ballast-name">Bow</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+              <div class="ballast-item">
+                <div class="ballast-name">Port PNP</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+              <div class="ballast-item">
+                <div class="ballast-name">Stbd PNP</div>
+                <div class="ballast-percent">25%</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="trip-info-item">
-          <span>Fuel Avg</span>
-          <strong>12.5 mpg</strong>
-        </div>
-        <div class="trip-info-item">
-          <span>Fuel Used</span>
-          <strong>3.2 gal</strong>
-        </div>
-        <div class="trip-info-item">
-          <span>Trip Distance</span>
-          <strong>40.0 mi</strong>
-        </div>
-        <div class="trip-info-item">
-          <span>Fuel Rate</span>
-          <strong>8.5 gph</strong>
+        <div class="carousel-dots">
+          <span class="dot active" onclick="goToSlide(0)"></span>
+          <span class="dot" onclick="goToSlide(1)"></span>
         </div>
       </div>
     </div>

@@ -47,3 +47,33 @@ function deselectTank() {
   controlPanel.classList.remove('active');
   currentSelectedTank = null;
 }
+
+function openTrailerModePopup() {
+  const popup = document.getElementById('trailer-mode-popup');
+  popup.classList.add('active');
+}
+
+function closeTrailerModePopup() {
+  const popup = document.getElementById('trailer-mode-popup');
+  popup.classList.remove('active');
+}
+
+function openFillGates() {
+  console.log('Opening fill gates');
+  document.getElementById('fill-gates-status').textContent = 'open';
+}
+
+function closeFillGates() {
+  console.log('Closing fill gates');
+  document.getElementById('fill-gates-status').textContent = 'closed';
+}
+
+function openDrainGates() {
+  console.log('Opening drain gates');
+  document.getElementById('drain-gates-status').textContent = 'open';
+}
+
+function closeDrainGates() {
+  console.log('Closing drain gates');
+  document.getElementById('drain-gates-status').textContent = 'closed';
+}
