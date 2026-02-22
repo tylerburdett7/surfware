@@ -1,0 +1,165 @@
+<div id="settings-overlay" class="settings-overlay">
+
+  <!-- ══════════════ MAIN LIST ══════════════ -->
+  <div class="set-view" id="set-main-view">
+
+    <div class="set-page-title">Settings</div>
+
+    <div class="set-list">
+      <div class="set-row set-row--link" onclick="setShowUser()">
+        <span class="set-row-label">User Settings</span>
+        <span class="set-row-chevron">›</span>
+      </div>
+      <div class="set-row set-row--link" onclick="setOpenDiag()">
+        <span class="set-row-label">Diagnostics</span>
+        <span class="set-row-chevron">›</span>
+      </div>
+      <div class="set-row">
+        <span class="set-row-label">Inspection Mode</span>
+        <label class="set-toggle">
+          <input type="checkbox" id="set-inspection-chk" onchange="setToggleInspection(this.checked)">
+          <span class="set-toggle-track"><span class="set-toggle-thumb"></span></span>
+        </label>
+      </div>
+      <div class="set-row set-row--link" onclick="setShowDealerPin()">
+        <span class="set-row-label">Dealer Settings</span>
+        <span class="set-row-chevron">›</span>
+      </div>
+      <div class="set-row set-row--link" onclick="openBallast()">
+        <span class="set-row-label">Ballast</span>
+        <span class="set-row-chevron">›</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ USER SETTINGS ══════════════ -->
+  <div class="set-view" id="set-user-view" style="display:none">
+
+    <div class="set-nav-row">
+      <button class="set-back-btn" onclick="setShowMain()">← Back</button>
+      <div class="set-view-title">User Settings</div>
+    </div>
+
+    <div class="set-list">
+
+      <!-- Shallow Water Alarm -->
+      <div class="set-row set-row--ctrl">
+        <span class="set-row-label">Shallow Water Alarm</span>
+        <div class="set-adj-row">
+          <button class="set-adj-btn" onmousedown="setStartAdj('shallow',-1,event)" onmouseup="setStopAdj()" onmouseleave="setStopAdj()">−</button>
+          <span class="set-adj-val" id="set-shallow-val">8</span>
+          <button class="set-adj-btn" onmousedown="setStartAdj('shallow',1,event)" onmouseup="setStopAdj()" onmouseleave="setStopAdj()">+</button>
+        </div>
+      </div>
+
+      <!-- Clock -->
+      <div class="set-row set-row--link" onclick="setOpenClockPad()">
+        <span class="set-row-label">Clock</span>
+        <span class="set-clock-display" id="set-clock-display">12:00 PM</span>
+      </div>
+
+      <!-- Change Theme -->
+      <div class="set-row set-row--link" onclick="setChangeTheme()">
+        <span class="set-row-label">Change Theme</span>
+        <span class="set-row-chevron">›</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ══════════════ DEALER PIN ══════════════ -->
+  <div class="set-view" id="set-dealer-pin-view" style="display:none">
+
+    <div class="set-nav-row">
+      <button class="set-back-btn" onclick="setShowMain()">← Back</button>
+      <div class="set-view-title">Dealer Settings</div>
+    </div>
+
+    <div class="set-pin-wrap">
+      <div class="set-pin-label">Enter Access Code</div>
+      <div class="set-pin-dots" id="set-pin-dots">
+        <div class="set-pin-dot" id="set-pin-dot-0"></div>
+        <div class="set-pin-dot" id="set-pin-dot-1"></div>
+        <div class="set-pin-dot" id="set-pin-dot-2"></div>
+        <div class="set-pin-dot" id="set-pin-dot-3"></div>
+      </div>
+      <div class="set-pin-error" id="set-pin-error"></div>
+      <div class="set-numpad set-numpad--sm">
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('1')">1</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('2')">2</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('3')">3</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('4')">4</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('5')">5</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('6')">6</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('7')">7</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('8')">8</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('9')">9</button>
+        <div class="set-numpad-empty set-numpad-empty--sm"></div>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setPinPress('0')">0</button>
+        <button class="set-numpad-btn set-numpad-btn--sm set-numpad-back" onclick="setPinBack()">⌫</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ DEALER SETTINGS ══════════════ -->
+  <div class="set-view" id="set-dealer-view" style="display:none">
+
+    <div class="set-nav-row">
+      <button class="set-back-btn" onclick="setShowMain()">← Back</button>
+      <div class="set-view-title">Dealer Settings</div>
+    </div>
+
+    <div class="set-list">
+      <div class="set-row set-row--ctrl">
+        <span class="set-row-label">Model</span>
+        <div class="set-model-btns">
+          <button class="set-model-btn" id="set-model-RI230" onclick="setSelectModel('RI230')">RI230</button>
+          <button class="set-model-btn active" id="set-model-Ri245" onclick="setSelectModel('Ri245')">Ri245</button>
+          <button class="set-model-btn" id="set-model-RI265" onclick="setSelectModel('RI265')">RI265</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ CLOCK NUMPAD POPUP ══════════════ -->
+  <div class="set-clock-overlay" id="set-clock-overlay" onclick="setCloseClockPad()">
+    <div class="set-clock-card" onclick="event.stopPropagation()">
+      <div class="set-clock-display-row">
+        <span class="set-clock-digits" id="set-clock-digits">12:00</span>
+        <button class="set-ampm-btn" id="set-clock-ampm-btn" onclick="setToggleAmPm()">PM</button>
+      </div>
+      <div class="set-numpad set-numpad--sm">
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('1')">1</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('2')">2</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('3')">3</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('4')">4</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('5')">5</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('6')">6</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('7')">7</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('8')">8</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('9')">9</button>
+        <button class="set-numpad-btn set-numpad-btn--sm set-numpad-back" onclick="setClockBack()">⌫</button>
+        <button class="set-numpad-btn set-numpad-btn--sm" onclick="setClockDigit('0')">0</button>
+        <button class="set-numpad-btn set-numpad-btn--sm set-clock-done-btn" onclick="setClockDone()">Set</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DIAGNOSTICS POPUP ══════════════ -->
+  <div class="set-diag-overlay" id="set-diag-overlay" onclick="setCloseDiag()">
+    <div class="set-diag-card" onclick="event.stopPropagation()">
+      <div class="set-diag-header">
+        <div class="set-diag-title">Diagnostics</div>
+        <button class="set-diag-close" onclick="setCloseDiag()">✕</button>
+      </div>
+      <div class="set-diag-body">
+        <div class="set-diag-empty">No active codes</div>
+      </div>
+    </div>
+  </div>
+
+</div>

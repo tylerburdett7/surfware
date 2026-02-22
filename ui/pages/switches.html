@@ -1,0 +1,139 @@
+<div id="switches-overlay" class="switches-overlay">
+  <div class="switches-content">
+    <div class="switches-header">Boat Controls</div>
+    <div class="switches-grid">
+      <!-- Master RGB -->
+      <div class="switch-cell" data-switch="master-rgb">
+        <div class="switch-cell-inner">
+          <span class="switch-label">All RGB</span>
+          <div class="switch-toggle" id="toggle-master-rgb" onclick="toggleSwitch('master-rgb', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-strip color-slot color-slot-empty" id="color-master-rgb" onclick="openColorPopup('master-rgb', event)"></div>
+        </div>
+      </div>
+      <!-- RGB Lights -->
+      <div class="switch-cell" data-switch="speaker">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Speaker</span>
+          <div class="switch-toggle" id="toggle-speaker" onclick="toggleSwitch('speaker', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-strip color-slot" id="color-speaker" onclick="openColorPopup('speaker', event)" style="background-color: #d4a533;"></div>
+        </div>
+      </div>
+      <div class="switch-cell" data-switch="interior">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Interior</span>
+          <div class="switch-toggle" id="toggle-interior" onclick="toggleSwitch('interior', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-strip color-slot" id="color-interior" onclick="openColorPopup('interior', event)" style="background-color: #ffffff;"></div>
+        </div>
+      </div>
+      <div class="switch-cell" data-switch="underwater">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Underwater</span>
+          <div class="switch-toggle" id="toggle-underwater" onclick="toggleSwitch('underwater', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-strip color-slot" id="color-underwater" onclick="openColorPopup('underwater', event)" style="background-color: #00aaff;"></div>
+        </div>
+      </div>
+      <!-- Simple toggle lights -->
+      <div class="switch-cell" data-switch="exterior">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Exterior</span>
+          <div class="switch-toggle" id="toggle-exterior" onclick="toggleSwitch('exterior', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-slot"></div>
+        </div>
+      </div>
+      <div class="switch-cell" data-switch="tower">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Tower</span>
+          <div class="switch-toggle" id="toggle-tower" onclick="toggleSwitch('tower', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-slot"></div>
+        </div>
+      </div>
+      <div class="switch-cell" data-switch="nav">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Nav</span>
+          <div class="switch-toggle" id="toggle-nav" onclick="toggleSwitch('nav', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-slot"></div>
+        </div>
+      </div>
+      <div class="switch-cell" data-switch="anchor">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Anchor</span>
+          <div class="switch-toggle" id="toggle-anchor" onclick="toggleSwitch('anchor', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-slot"></div>
+        </div>
+      </div>
+      <div class="switch-cell" data-switch="bilge">
+        <div class="switch-cell-inner">
+          <span class="switch-label">Bilge</span>
+          <div class="switch-toggle" id="toggle-bilge" onclick="toggleSwitch('bilge', event)">
+            <div class="switch-track"><div class="switch-thumb"></div></div>
+          </div>
+          <div class="color-slot"></div>
+        </div>
+      </div>
+      <div class="switches-bottom-row">
+        <div class="switch-cell" data-switch="heater-fan">
+          <div class="switch-cell-inner">
+            <span class="switch-label">Heater Fan</span>
+            <div class="switch-toggle" id="toggle-heater-fan" onclick="toggleSwitch('heater-fan', event)">
+              <div class="switch-track"><div class="switch-thumb"></div></div>
+            </div>
+            <div class="color-slot"></div>
+          </div>
+        </div>
+        <div class="switch-cell" data-switch="seat-heater">
+          <div class="switch-cell-inner">
+            <span class="switch-label">Seat Heater</span>
+            <div class="switch-toggle" id="toggle-seat-heater" onclick="toggleSwitch('seat-heater', event)">
+              <div class="switch-track"><div class="switch-thumb"></div></div>
+            </div>
+            <div class="color-slot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Color picker popup -->
+  <div class="color-popup" id="color-popup">
+    <div class="color-popup-header">
+      <span id="color-popup-title">Light Color</span>
+      <button class="color-popup-close" onclick="closeColorPopup()">×</button>
+    </div>
+    <div class="color-wheel-wrap">
+      <div class="color-wheel" id="color-wheel"></div>
+      <div class="color-wheel-marker" id="color-wheel-marker"></div>
+    </div>
+    <div class="color-sl-box" id="color-sl-box">
+      <div class="color-sl-marker" id="color-sl-marker"></div>
+    </div>
+    <div class="color-presets">
+      <button class="color-preset" style="background:#ff4444" data-color="#ff4444"></button>
+      <button class="color-preset" style="background:#ff8844" data-color="#ff8844"></button>
+      <button class="color-preset" style="background:#ffcc44" data-color="#ffcc44"></button>
+      <button class="color-preset" style="background:#88ff44" data-color="#88ff44"></button>
+      <button class="color-preset" style="background:#44ff88" data-color="#44ff88"></button>
+      <button class="color-preset" style="background:#44ffcc" data-color="#44ffcc"></button>
+      <button class="color-preset" style="background:#4488ff" data-color="#4488ff"></button>
+      <button class="color-preset" style="background:#8844ff" data-color="#8844ff"></button>
+      <button class="color-preset" style="background:#ff44ff" data-color="#ff44ff"></button>
+      <button class="color-preset" style="background:#ffffff" data-color="#ffffff"></button>
+      <button class="color-preset" style="background:#d4a533" data-color="#d4a533"></button>
+    </div>
+  </div>
+</div>

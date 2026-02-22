@@ -40,18 +40,92 @@ document.querySelector('.volume-slider').addEventListener('input', function() {
 });
 
 function openBallast() {
+  closeSurf();
+  closeSwitches();
+  closeProfiles();
+  closeMusic();
+  closeSettings();
   const overlay = document.getElementById('ballast-overlay');
-  if (overlay) {
-    overlay.style.display = 'flex';
-  }
+  if (overlay) overlay.style.display = 'flex';
 }
 
 function closeBallast() {
   const overlay = document.getElementById('ballast-overlay');
-  if (overlay) {
-    overlay.style.display = 'none';
+  if (overlay) overlay.style.display = 'none';
+  if (typeof deselectTank === 'function') deselectTank();
+}
+
+function openSurf() {
+  closeBallast();
+  closeSwitches();
+  closeProfiles();
+  closeMusic();
+  closeSettings();
+  const overlay = document.getElementById('surf-overlay');
+  if (overlay) overlay.classList.add('active');
+  const tabIndicators = document.getElementById('tab-indicators');
+  if (tabIndicators) tabIndicators.classList.add('surf-mode');
+  const controlScreen = document.querySelector('.control-screen');
+  if (controlScreen) controlScreen.classList.add('surf-mode');
+}
+
+function closeSurf() {
+  const overlay = document.getElementById('surf-overlay');
+  if (overlay) overlay.classList.remove('active');
+  const profilePopup = document.getElementById('profile-popup');
+  if (profilePopup) profilePopup.classList.remove('active');
+  const tabIndicators = document.getElementById('tab-indicators');
+  if (tabIndicators) tabIndicators.classList.remove('surf-mode');
+  const controlScreen = document.querySelector('.control-screen');
+  if (controlScreen) controlScreen.classList.remove('surf-mode');
+}
+
+function openSwitches() {
+  closeBallast();
+  closeSurf();
+  closeProfiles();
+  closeMusic();
+  closeSettings();
+  const overlay = document.getElementById('switches-overlay');
+  if (overlay) overlay.classList.add('active');
+}
+
+function closeSwitches() {
+  const overlay = document.getElementById('switches-overlay');
+  if (overlay) overlay.classList.remove('active');
+  const colorPopup = document.getElementById('color-popup');
+  if (colorPopup) colorPopup.classList.remove('active');
+}
+
+function openProfiles() {
+  const overlay = document.getElementById('profiles-overlay');
+  if (overlay && overlay.classList.contains('active')) {
+    closeProfiles();
+    return;
   }
-  deselectTank();
+  closeBallast();
+  closeSurf();
+  closeSwitches();
+  closeMusic();
+  closeSettings();
+  if (overlay) {
+    overlay.classList.add('active');
+    if (typeof profShowList === 'function') profShowList();
+  }
+}
+
+function closeProfiles() {
+  const overlay = document.getElementById('profiles-overlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+function closeAll() {
+  closeBallast();
+  closeSurf();
+  closeSwitches();
+  closeProfiles();
+  closeMusic();
+  closeSettings();
 }
 
 // Trip info carousel functionality

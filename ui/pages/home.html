@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <title>Centurion Ri245 UI</title>
   <link rel="stylesheet" href="../styles.css">
-  <script src="../home.js"></script>
+  <script src="../js/home.js"></script>
   <script src="../js/ballast.js"></script>
+  <script src="../js/surf.js"></script>
+  <script src="../js/switches.js"></script>
+  <script src="../js/profiles.js"></script>
+  <script src="../js/music.js"></script>
+  <script src="../js/settings.js"></script>
 </head>
 <body>
 
@@ -15,6 +20,11 @@
   <section class="screen info-screen">
 
     <img src="../images/centurionlogo.png" alt="Centurion Logo" class="screen-logo">
+
+    <div class="profiles-btn-group">
+      <button class="profiles-btn" onclick="openProfiles()">Profiles</button>
+      <div class="profiles-active-label" id="profiles-active-label"></div>
+    </div>
 
     <div class="top-time">12:42 PM</div>
 
@@ -107,19 +117,48 @@
 
     <div class="bottom-panels">
 
-      <div class="tab-indicators">
-        <div class="tab-box">
-          <div class="tab-label">Center Tab</div>
-          <div class="tab-value">35%</div>
+      <div class="tab-indicators" id="tab-indicators">
+
+        <!-- Center Tab → Media player when surf is active -->
+        <div class="tab-box tab-box--swap" id="tab-box-center">
+          <div class="tab-face tab-face--normal">
+            <div class="tab-label">Center Tab</div>
+            <div class="tab-value">35%</div>
+          </div>
+          <div class="tab-face tab-face--surf">
+            <div class="tab-surf-title">Slipfast</div>
+            <div class="tab-surf-artist">Role Model</div>
+            <div class="tab-surf-controls">
+              <button>⏮</button>
+              <button>⏯</button>
+              <button>⏭</button>
+            </div>
+            <div class="tab-surf-progress">
+              <div class="tab-surf-progress-fill"></div>
+            </div>
+          </div>
         </div>
-        <div class="tab-box">
-          <div class="tab-label">QuickSurf</div>
-          <div class="tab-value">LEFT</div>
+
+        <!-- QuickSurf → Volume when surf is active -->
+        <div class="tab-box tab-box--swap" id="tab-box-quicksurf">
+          <div class="tab-face tab-face--normal">
+            <div class="tab-label">QuickSurf</div>
+            <div class="tab-value">LEFT</div>
+          </div>
+          <div class="tab-face tab-face--surf">
+            <div class="tab-surf-vol">
+              <img class="tab-vol-icon" src="../images/audio-icon.png" alt="volume">
+              <input type="range" class="tab-vol-slider" min="0" max="100" value="70">
+            </div>
+          </div>
         </div>
+
+        <!-- QuickLaunch: stays the same -->
         <div class="tab-box">
           <div class="tab-label">QuickLaunch</div>
           <div class="tab-value">OFF</div>
         </div>
+
       </div>
 
     </div>
@@ -245,19 +284,35 @@
       </div>
     </div>
 
-    <div class="right-layout">
-      <div class="menu-buttons">
-        <button onclick="openBallast()">Ballast</button>
-        <button>Surf</button>
-        <button>Switches</button>
-        <button>Profiles</button>
-        <button>Music</button>
-        <button>Settings</button>
-      </div>
-    </div>
+    <div class="right-layout"></div>
 
     <!-- Ballast overlay content loaded from ballast.html -->
     <div id="ballast-container"></div>
+
+    <!-- Surf overlay content loaded from surf.html -->
+    <div id="surf-container"></div>
+
+    <!-- Switches overlay content loaded from switches.html -->
+    <div id="switches-container"></div>
+
+    <!-- Profiles overlay content loaded from profiles.html -->
+    <div id="profiles-container"></div>
+
+    <!-- Music overlay content loaded from music.html -->
+    <div id="music-container"></div>
+
+    <!-- Settings overlay content loaded from settings.html -->
+    <div id="settings-container"></div>
+
+    <!-- Shared nav menu - fixed position, above overlay -->
+    <div id="nav-menu" class="menu-buttons fixed-menu">
+      <button onclick="closeAll()">Home</button>
+      <button id="nav-ballast-btn" onclick="openBallast()">Ballast</button>
+      <button id="nav-surf-btn" onclick="openSurf()">Surf</button>
+      <button id="nav-switches-btn" onclick="openSwitches()">Switches</button>
+      <button onclick="openMusic()">Music</button>
+      <button onclick="openSettings()">Settings</button>
+    </div>
 
   </section>
 

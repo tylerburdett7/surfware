@@ -1,0 +1,130 @@
+<div id="music-overlay" class="music-overlay">
+
+  <!-- ══════════════ MAIN VIEW ══════════════ -->
+  <div class="mus-view" id="mus-main-view">
+
+    <!-- Action buttons at top -->
+    <div class="mus-action-row">
+      <button class="mus-action-btn" onclick="musOpenZone()">Zone Control</button>
+      <button class="mus-action-btn" onclick="musShowBT()">Bluetooth Manager</button>
+    </div>
+
+    <!-- Album art (left) + track info & controls (right) -->
+    <div class="mus-main-card">
+      <div class="mus-album-art" id="mus-album-art">
+        <img class="mus-album-img" src="../images/album-art.webp" alt="album art">
+      </div>
+      <div class="mus-track-section">
+        <div class="mus-track-title" id="mus-track-title">Slipfast</div>
+        <div class="mus-track-artist" id="mus-track-artist">Role Model</div>
+        <div class="mus-controls">
+          <button class="mus-ctrl-btn" onclick="musPrev()">⏮</button>
+          <button class="mus-ctrl-btn mus-play-btn" id="mus-play-btn" onclick="musTogglePlay()">⏸</button>
+          <button class="mus-ctrl-btn" onclick="musNext()">⏭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar (full width) -->
+    <div class="mus-progress-section">
+      <div class="mus-progress-bar" id="mus-progress-bar" onclick="musSeek(event)">
+        <div class="mus-progress-fill" id="mus-progress-fill" style="width:38%"></div>
+      </div>
+      <div class="mus-times">
+        <span class="mus-time" id="mus-time-current">1:24</span>
+        <span class="mus-time" id="mus-time-total">3:42</span>
+      </div>
+    </div>
+
+    <!-- Source centered below progress -->
+    <div class="mus-source-row">
+      <svg class="mus-bt-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.5 7.5L17.5 16.5M17.5 7.5L6.5 16.5M12 3V21M12 3L17.5 8.5L12 14M12 21L6.5 15.5L12 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="mus-source-name">Tyler's iPhone</span>
+    </div>
+
+    <!-- Volume -->
+    <div class="mus-vol-row">
+      <svg class="mus-vol-icon" id="mus-vol-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onclick="musToggleMute()">
+        <path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="mus-vol-waves" d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="range" class="mus-vol-slider" id="mus-vol-slider" min="0" max="100" value="70">
+    </div>
+
+    <!-- Zone control popup -->
+    <div class="mus-zone-popup" id="mus-zone-popup" onclick="musCloseZone()">
+      <div class="mus-zone-card" onclick="event.stopPropagation()">
+        <div class="mus-zone-header">
+          <div class="mus-zone-title">Zone Control</div>
+          <button class="mus-zone-close" onclick="musCloseZone()">✕</button>
+        </div>
+        <div class="mus-zone-body">
+          <div class="mus-zone-channel">
+            <div class="mus-zone-label">Tower</div>
+            <input type="range" class="mus-zone-slider" id="mus-zone-tower" min="0" max="100" value="70" oninput="musZoneVal('tower',this.value)">
+            <div class="mus-zone-val" id="mus-zone-tower-val">70</div>
+          </div>
+          <div class="mus-zone-channel">
+            <div class="mus-zone-label">Bow</div>
+            <input type="range" class="mus-zone-slider" id="mus-zone-bow" min="0" max="100" value="70" oninput="musZoneVal('bow',this.value)">
+            <div class="mus-zone-val" id="mus-zone-bow-val">70</div>
+          </div>
+          <div class="mus-zone-channel">
+            <div class="mus-zone-label">Cockpit</div>
+            <input type="range" class="mus-zone-slider" id="mus-zone-cockpit" min="0" max="100" value="70" oninput="musZoneVal('cockpit',this.value)">
+            <div class="mus-zone-val" id="mus-zone-cockpit-val">70</div>
+          </div>
+          <div class="mus-zone-channel">
+            <div class="mus-zone-label">Sub</div>
+            <input type="range" class="mus-zone-slider" id="mus-zone-sub" min="0" max="100" value="70" oninput="musZoneVal('sub',this.value)">
+            <div class="mus-zone-val" id="mus-zone-sub-val">70</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ BLUETOOTH MANAGER VIEW ══════════════ -->
+  <div class="mus-view" id="mus-bt-view" style="display:none">
+
+    <div class="mus-nav-row">
+      <button class="mus-back-btn" onclick="musShowMain()">← Back</button>
+      <div class="mus-view-title">Bluetooth Manager</div>
+    </div>
+
+    <div class="mus-bt-section-label">Connected</div>
+
+    <div class="mus-bt-device mus-bt-device--connected">
+      <svg class="mus-bt-icon-sm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.5 7.5L17.5 16.5M17.5 7.5L6.5 16.5M12 3V21M12 3L17.5 8.5L12 14M12 21L6.5 15.5L12 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="mus-bt-device-info">
+        <div class="mus-bt-device-name">Tyler's iPhone</div>
+        <div class="mus-bt-device-status">Connected · Audio</div>
+      </div>
+      <button class="mus-bt-action-btn mus-bt-disconnect-btn">Disconnect</button>
+    </div>
+
+    <div class="mus-bt-section-label" style="margin-top:8px">Previously Connected</div>
+
+    <div class="mus-bt-prev-list" id="mus-bt-prev-list">
+      <div class="mus-bt-device">
+        <svg class="mus-bt-icon-sm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.5 7.5L17.5 16.5M17.5 7.5L6.5 16.5M12 3V21M12 3L17.5 8.5L12 14M12 21L6.5 15.5L12 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="mus-bt-device-info">
+          <div class="mus-bt-device-name">JL Audio MBT-RX</div>
+          <div class="mus-bt-device-status">Last connected 2 days ago</div>
+        </div>
+        <button class="mus-bt-action-btn">Connect</button>
+      </div>
+    </div>
+
+    <button class="mus-bt-scan-btn" onclick="musScanBT()">+ Add New Device</button>
+
+  </div>
+
+</div>

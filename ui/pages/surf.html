@@ -1,0 +1,54 @@
+<div id="surf-overlay" class="surf-overlay">
+  <div class="surf-content">
+    <!-- Surf Left / Right buttons -->
+    <div class="surf-direction-row">
+      <button class="surf-direction-btn" id="surf-left-btn" onclick="selectSurfSide('left')">
+        <span class="surf-direction-icon">◀</span>
+        Surf Left
+      </button>
+      <button class="surf-direction-btn" id="surf-right-btn" onclick="selectSurfSide('right')">
+        Surf Right
+        <span class="surf-direction-icon">▶</span>
+      </button>
+    </div>
+
+    <!-- Adjustment boxes: Surf Tab, Center Tab, Speed -->
+    <div class="surf-adjustments">
+      <div class="surf-adjust-box">
+        <div class="surf-adjust-label">Surf Tab</div>
+        <div class="surf-adjust-controls">
+          <button class="surf-adjust-btn" id="surf-tab-minus" onmousedown="startAdjust('surf-tab', -1, event)" onmouseup="stopAdjust()" onmouseleave="stopAdjust()">−</button>
+          <span class="surf-adjust-value" id="surf-tab-value">45</span>
+          <button class="surf-adjust-btn" id="surf-tab-plus" onmousedown="startAdjust('surf-tab', 1, event)" onmouseup="stopAdjust()" onmouseleave="stopAdjust()">+</button>
+        </div>
+      </div>
+      <div class="surf-adjust-box">
+        <div class="surf-adjust-label">Center Tab</div>
+        <div class="surf-adjust-controls">
+          <button class="surf-adjust-btn" id="center-tab-minus" onmousedown="startAdjust('center-tab', -1, event)" onmouseup="stopAdjust()" onmouseleave="stopAdjust()">−</button>
+          <span class="surf-adjust-value" id="center-tab-value">35</span>
+          <button class="surf-adjust-btn" id="center-tab-plus" onmousedown="startAdjust('center-tab', 1, event)" onmouseup="stopAdjust()" onmouseleave="stopAdjust()">+</button>
+        </div>
+      </div>
+      <div class="surf-adjust-box">
+        <div class="surf-adjust-label">Speed</div>
+        <div class="surf-adjust-controls">
+          <button class="surf-adjust-btn" id="speed-minus" onmousedown="startAdjust('speed', -1, event)" onmouseup="stopAdjust()" onmouseleave="stopAdjust()">−</button>
+          <span class="surf-adjust-value" id="speed-value">11.5</span>
+          <button class="surf-adjust-btn" id="speed-plus" onmousedown="startAdjust('speed', 1, event)" onmouseup="stopAdjust()" onmouseleave="stopAdjust()">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Popup (retained for JS compatibility) -->
+  <div class="profile-popup" id="profile-popup">
+    <div class="profile-popup-header">
+      Saved Profiles
+      <button class="profile-popup-close" onclick="closeProfilePopup()">×</button>
+    </div>
+    <div class="profile-list" id="profile-list">
+      <div class="profile-list-empty">No profiles yet. Create profiles on the Profiles page.</div>
+    </div>
+  </div>
+</div>

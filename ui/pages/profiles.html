@@ -1,0 +1,185 @@
+<div id="profiles-overlay" class="profiles-overlay">
+
+  <!-- ══════════════ LIST VIEW ══════════════ -->
+  <div class="prof-view" id="prof-list-view">
+
+    <div class="prof-page-title">Saved Profiles</div>
+
+    <div class="prof-list" id="prof-list">
+      <div class="prof-list-empty">No profiles yet. Tap "Add Profile" to create one.</div>
+    </div>
+
+    <button class="prof-add-btn" onclick="profShowForm()">+ Add Profile</button>
+
+  </div>
+
+  <!-- ══════════════ FORM VIEW ══════════════ -->
+  <div class="prof-view" id="prof-form-view" style="display:none">
+
+    <div class="prof-nav-row">
+      <button class="prof-back-btn" onclick="profShowList()">← Back</button>
+      <div class="prof-view-title" id="prof-form-title">Add Profile</div>
+    </div>
+
+    <input type="text" class="prof-name-input" id="prof-name-input" placeholder="Profile name…">
+
+    <!-- Speed · CATS · QuickSurf -->
+    <div class="prof-top-controls">
+      <div class="prof-ctrl">
+        <div class="prof-ctrl-label">Speed</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('speed',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-speed-val">11.5</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('speed',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-ctrl">
+        <div class="prof-ctrl-label">CATS</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('cats',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-cats-val">0</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('cats',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <!-- QuickSurf + inline Surf Tab (slides in when L/R selected) -->
+      <div class="prof-qs-wrap">
+        <div class="prof-qs-inner" id="prof-qs-inner">
+          <div class="prof-qs-group">
+            <div class="prof-ctrl-label">QuickSurf</div>
+            <div class="prof-qs-btns">
+              <button class="prof-qs-btn" id="prof-qs-left"  onclick="profSetQS('left')">Left</button>
+              <button class="prof-qs-btn" id="prof-qs-right" onclick="profSetQS('right')">Right</button>
+              <button class="prof-qs-btn active" id="prof-qs-off" onclick="profSetQS('off')">Off</button>
+            </div>
+          </div>
+          <div class="prof-qs-tab" id="prof-tab-row">
+            <div class="prof-ctrl-label">Surf Tab</div>
+            <div class="prof-adj-row">
+              <button class="prof-adj-btn" onmousedown="profStartAdj('surftab',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+              <span class="prof-adj-val" id="prof-surftab-val">45</span>
+              <button class="prof-adj-btn" onmousedown="profStartAdj('surftab',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prof-section-header">Ballast</div>
+
+    <div class="prof-ballast-grid">
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Ramfill P</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('ramfillPort',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-ramfillPort-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('ramfillPort',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Ramfill S</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('ramfillStbd',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-ramfillStbd-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('ramfillStbd',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Center</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('center',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-center-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('center',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Port PNP</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('portPnp',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-portPnp-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('portPnp',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Stbd PNP</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('stbdPnp',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-stbdPnp-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('stbdPnp',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Bow PNP</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('bowPnp',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-bowPnp-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('bowPnp',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+      <div class="prof-tank-ctrl">
+        <div class="prof-tank-label">Transom PNP</div>
+        <div class="prof-adj-row">
+          <button class="prof-adj-btn" onmousedown="profStartAdj('transomPnp',-1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">−</button>
+          <span class="prof-adj-val" id="prof-transomPnp-val">0%</span>
+          <button class="prof-adj-btn" onmousedown="profStartAdj('transomPnp',1,event)" onmouseup="profStopAdj()" onmouseleave="profStopAdj()">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="prof-save-btn" onclick="profSave()">Save Profile</button>
+
+  </div>
+
+  <!-- ══════════════ DETAIL VIEW ══════════════ -->
+  <div class="prof-view" id="prof-detail-view" style="display:none">
+
+    <div class="prof-nav-row">
+      <button class="prof-back-btn" onclick="profShowList()">← Back</button>
+      <div class="prof-view-title" id="prof-detail-name">Profile</div>
+      <button class="prof-activate-btn" id="prof-activate-btn" onclick="profToggleActivate()">Activate</button>
+    </div>
+
+    <div class="prof-detail-stats">
+      <div class="prof-detail-item">
+        <div class="prof-detail-label">Speed</div>
+        <div class="prof-detail-val" id="prof-detail-speed">—</div>
+      </div>
+      <div class="prof-detail-item">
+        <div class="prof-detail-label">CATS</div>
+        <div class="prof-detail-val" id="prof-detail-cats">—</div>
+      </div>
+      <div class="prof-detail-item">
+        <div class="prof-detail-label">QuickSurf</div>
+        <div class="prof-detail-val" id="prof-detail-qs">—</div>
+      </div>
+      <div class="prof-detail-item" id="prof-detail-tab-item">
+        <div class="prof-detail-label">Surf Tab</div>
+        <div class="prof-detail-val" id="prof-detail-tab">—</div>
+      </div>
+    </div>
+
+    <div class="prof-section-header">Ballast</div>
+
+    <div class="prof-detail-ballast" id="prof-detail-ballast">
+      <!-- rendered by JS -->
+    </div>
+
+    <div class="prof-detail-actions">
+      <button class="prof-edit-btn" onclick="profEditCurrent()">Edit Profile</button>
+      <button class="prof-delete-btn" onclick="profDeleteCurrent()">Delete</button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ DELETE CONFIRMATION ══════════════ -->
+  <div class="prof-delete-overlay" id="prof-delete-overlay">
+    <div class="prof-delete-card">
+      <div class="prof-delete-msg">Delete "<span id="prof-delete-name"></span>"?</div>
+      <div class="prof-delete-sub">This cannot be undone.</div>
+      <div class="prof-delete-actions">
+        <button class="prof-delete-cancel-btn" onclick="profCancelDelete()">Cancel</button>
+        <button class="prof-delete-confirm-btn" onclick="profConfirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+</div>
