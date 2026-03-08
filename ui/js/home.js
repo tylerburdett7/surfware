@@ -1,4 +1,30 @@
 let isMuted = false;
+let cruiseSpeed = 0.0;
+let cruiseAdjTimer = null;
+let cruiseAdjInterval = null;
+let cruiseAdjCount = 0;
+
+function cruiseStartAdj(dir) {
+  cruiseAdjCount = 0;
+  _cruiseDoAdj(dir);
+  cruiseAdjTimer = setTimeout(() => {
+    cruiseAdjInterval = setInterval(() => _cruiseDoAdj(dir), 60);
+  }, 400);
+}
+
+function cruiseStopAdj() {
+  clearTimeout(cruiseAdjTimer);
+  clearInterval(cruiseAdjInterval);
+  cruiseAdjCount = 0;
+}
+
+function _cruiseDoAdj(dir) {
+  cruiseAdjCount++;
+  const step = cruiseAdjCount > 15 ? 0.5 : 0.1;
+  cruiseSpeed = Math.round(Math.min(50, Math.max(0, cruiseSpeed + dir * step)) * 10) / 10;
+  const el = document.getElementById('cruise-set-val');
+  if (el) el.textContent = cruiseSpeed.toFixed(1);
+}
 
 function toggleCruise(event) {
   const button = event.currentTarget;
@@ -6,9 +32,16 @@ function toggleCruise(event) {
   const cruiseControls = speedGauge.querySelector('.cruise-controls');
   const cruiseWrapper = speedGauge.querySelector('.cruise-toggle-wrapper');
   
+  const turningOn = !button.classList.contains('active');
   button.classList.toggle('active');
   cruiseControls.classList.toggle('hidden');
   cruiseWrapper.classList.toggle('active');
+
+  if (turningOn) {
+    cruiseSpeed = 11.0;
+    const el = document.getElementById('cruise-set-val');
+    if (el) el.textContent = '11.0';
+  }
 }
 
 function toggleMute() {

@@ -247,12 +247,38 @@ function profToggleActivate() {
 
   if (profState.activeId === profState.viewingId) {
     profState.activeId = null;
+    _profSetCruise(false, 0);
   } else {
     profState.activeId = profState.viewingId;
+    const p = profState.profiles.find(p => p.id === profState.viewingId);
+    if (p) _profSetCruise(true, p.speed);
   }
 
   profPersist();
   _profRenderDetail(profState.viewingId);
+}
+
+function _profSetCruise(on, speed) {
+  const btn = document.querySelector('.cruise-button');
+  const controls = document.querySelector('.cruise-controls');
+  const wrapper = document.querySelector('.cruise-toggle-wrapper');
+  const setVal = document.querySelector('.cruise-set-value span');
+  if (!btn) return;
+
+  const isActive = btn.classList.contains('active');
+
+  if (on && !isActive) {
+    btn.classList.add('active');
+    if (controls) controls.classList.remove('hidden');
+    if (wrapper) wrapper.classList.add('active');
+  } else if (!on && isActive) {
+    btn.classList.remove('active');
+    if (controls) controls.classList.add('hidden');
+    if (wrapper) wrapper.classList.remove('active');
+  }
+
+  if (setVal) setVal.textContent = speed.toFixed(1);
+  if (typeof cruiseSpeed !== 'undefined') cruiseSpeed = speed;
 }
 
 // ─── Edit current ─────────────────────────────────────────────────────────────

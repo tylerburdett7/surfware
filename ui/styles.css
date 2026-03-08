@@ -18,8 +18,14 @@ body {
 /* APP */
 .app {
   display: flex;
-  gap: 24px;
+  flex-direction: column;
+  gap: 0;
   overflow: hidden;
+}
+
+.screens-row {
+  display: flex;
+  gap: 24px;
 }
 
 /* SCREENS */
@@ -2986,15 +2992,13 @@ body {
 }
 
 .prof-activate-btn.is-deactivate {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid #555;
-  color: #888;
+  background: linear-gradient(135deg, #c41e1e, #8b1818);
+  border: none;
+  color: #fff;
 }
 
 .prof-activate-btn.is-deactivate:hover {
-  background: rgba(255, 255, 255, 0.13);
-  border-color: #777;
-  color: #aaa;
+  background: linear-gradient(135deg, #d42e2e, #9b2828);
 }
 
 /* ── Detail: action buttons row ── */
@@ -3636,4 +3640,67 @@ body {
   font-size: 12px;
   color: #444;
   font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   THROTTLE CONTROL
+═══════════════════════════════════════════════════════ */
+
+.throttle-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 20px 16px;
+  width: 50%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+.throttle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.throttle-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.throttle-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: #d4a533;
+  min-width: 32px;
+  text-align: right;
+}
+
+.throttle-slider {
+  width: 100%;
+  cursor: pointer;
+  accent-color: #d4a533;
+  height: 6px;
+}
+
+.throttle-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #d4a533;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(212, 165, 51, 0.5);
+}
+
+.throttle-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #d4a533;
+  border: none;
+  cursor: pointer;
 }

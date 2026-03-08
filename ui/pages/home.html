@@ -11,10 +11,13 @@
   <script src="../js/profiles.js"></script>
   <script src="../js/music.js"></script>
   <script src="../js/settings.js"></script>
+  <script src="../js/sim.js"></script>
 </head>
 <body>
 
 <div class="app">
+
+  <div class="screens-row">
 
   <!-- LEFT SCREEN -->
   <section class="screen info-screen">
@@ -55,21 +58,21 @@
       <div class="gauge speed-gauge">
         <div class="gauge-label">SPEED</div>
         <div class="speed-value-with-cruise">
-          <div class="gauge-value">11.2 <span>MPH</span></div>
+          <div class="gauge-value">0.0 <span>MPH</span></div>
           <div class="cruise-toggle-wrapper">
             <button class="cruise-button" onclick="toggleCruise(event)">CRUISE</button>
           </div>
         </div>
         <div class="cruise-controls hidden">
-          <button class="cruise-btn">▲</button>
+          <button class="cruise-btn" onmousedown="cruiseStartAdj(1)" onmouseup="cruiseStopAdj()" onmouseleave="cruiseStopAdj()">▲</button>
           <div class="cruise-set-value">
-            <span>11.5</span>
+            <span id="cruise-set-val">0.0</span>
           </div>
-          <button class="cruise-btn">▼</button>
+          <button class="cruise-btn" onmousedown="cruiseStartAdj(-1)" onmouseup="cruiseStopAdj()" onmouseleave="cruiseStopAdj()">▼</button>
         </div>
         <div class="meter">
           <div class="meter-track">
-            <div class="meter-fill speed-fill" style="width: 18.7%;"></div>
+            <div class="meter-fill speed-fill" style="width: 0%;"></div>
             <div class="meter-ticks">
               <div class="tick"></div>
               <div class="tick"></div>
@@ -91,10 +94,10 @@
       <!-- RPM -->
       <div class="gauge">
         <div class="gauge-label">RPM</div>
-        <div class="gauge-value">3450 <span>RPM</span></div>
+        <div class="gauge-value">800 <span>RPM</span></div>
         <div class="meter">
           <div class="meter-track">
-            <div class="meter-fill rpm-fill" style="width: 43.1%;"></div>
+            <div class="meter-fill rpm-fill" style="width: 10%;"></div>
             <div class="meter-ticks">
               <div class="tick"></div>
               <div class="tick"></div>
@@ -315,6 +318,18 @@
     </div>
 
   </section>
+
+  </div> <!-- end .screens-row -->
+
+  <!-- THROTTLE — below both screens, simulates physical lever -->
+  <div class="throttle-control">
+    <div class="throttle-header">
+      <span class="throttle-label">THROTTLE</span>
+      <span class="throttle-pct" id="throttle-pct">0%</span>
+    </div>
+    <input type="range" class="throttle-slider" id="throttle-slider"
+           min="0" max="100" value="0" oninput="simSetThrottle(this.value)">
+  </div>
 
 </div>
 
