@@ -24,6 +24,7 @@ function _cruiseDoAdj(dir) {
   cruiseSpeed = Math.round(Math.min(50, Math.max(0, cruiseSpeed + dir * step)) * 10) / 10;
   const el = document.getElementById('cruise-set-val');
   if (el) el.textContent = cruiseSpeed.toFixed(1);
+  if (typeof simSendCruise === 'function') simSendCruise();
 }
 
 function toggleCruise(event) {
@@ -42,6 +43,7 @@ function toggleCruise(event) {
     const el = document.getElementById('cruise-set-val');
     if (el) el.textContent = '11.0';
   }
+  if (typeof simSendCruise === 'function') simSendCruise();
 }
 
 function toggleMute() {
@@ -61,16 +63,27 @@ function toggleMute() {
   }
 }
 
-document.querySelector('.volume-slider').addEventListener('input', function() {
-  if (isMuted) {
-    isMuted = false;
-    const icon = document.querySelector('.volume-icon');
-    const slider = document.querySelector('.volume-slider');
-    icon.src = '../images/audio-icon.png';
-    icon.classList.remove('muted');
-    slider.classList.remove('muted');
+function initVolumeSlider() {
+  const slider = document.querySelector('.volume-slider');
+  if (slider) {
+    slider.addEventListener('input', function() {
+      if (isMuted) {
+        isMuted = false;
+        const icon = document.querySelector('.volume-icon');
+        const s = document.querySelector('.volume-slider');
+        if (icon) icon.src = '../images/audio-icon.png';
+        if (icon) icon.classList.remove('muted');
+        if (s) s.classList.remove('muted');
+      }
+    });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVolumeSlider);
+} else {
+  initVolumeSlider();
+}
 
 function openBallast() {
   closeSurf();
@@ -159,6 +172,91 @@ function closeAll() {
   closeProfiles();
   closeMusic();
   closeSettings();
+}
+
+// ─── QuickLaunch (mutually exclusive with QuickSurf) ───────────────────────────
+
+let quickLaunchOn = false;
+let conflictPopupCallback = null;
+
+function isQuickLaunchOn() {
+  return quickLaunchOn;
+}
+
+function setQuickLaunchOff() {
+  quickLaunchOn = false;
+  updateQuickLaunchDisplay();
+}
+
+function setQuickLaunchOn() {
+  quickLaunchOn = true;
+  updateQuickLaunchDisplay();
+}
+
+function updateQuickLaunchDisplay() {
+  const el = document.getElementById('quicklaunch-status-value');
+  if (el) el.textContent = quickLaunchOn ? 'ON' : 'OFF';
+  const box = document.getElementById('tab-box-quicklaunch');
+  if (box) box.classList.toggle('active', quickLaunchOn);
+}
+
+function toggleQuickLaunch() {
+  if (quickLaunchOn) {
+    setQuickLaunchOff();
+    return;
+  }
+  if (typeof currentSurfSide !== 'undefined' && currentSurfSide) {
+    showConflictPopup('ql', () => {
+      if (typeof selectSurfSide === 'function') selectSurfSide(currentSurfSide);
+      setQuickLaunchOn();
+    });
+    return;
+  }
+  setQuickLaunchOn();
+}
+
+function showConflictPopup(mode, onActivate) {
+  const leftPopup = document.getElementById('conflict-popup-left');
+  const rightPopup = document.getElementById('conflict-popup-right');
+  const leftMsg = document.getElementById('conflict-popup-message-left');
+  const rightMsg = document.getElementById('conflict-popup-message-right');
+  const app = document.querySelector('.app');
+  if (leftPopup) leftPopup.classList.remove('active');
+  if (rightPopup) rightPopup.classList.remove('active');
+  if (app) app.classList.remove('conflict-popup-right-active');
+  conflictPopupCallback = onActivate;
+  const text = mode === 'ql' ? 'Activating QuickLaunch will turn off QuickSurf.' : 'Activating QuickSurf will turn off QuickLaunch.';
+  if (mode === 'ql' && leftPopup && leftMsg) {
+    leftMsg.textContent = text;
+    leftPopup.classList.add('active');
+  } else if (mode === 'qs' && rightPopup && rightMsg) {
+    rightMsg.textContent = text;
+    rightPopup.classList.add('active');
+    if (app) app.classList.add('conflict-popup-right-active');
+  }
+}
+
+function cancelConflictPopup() {
+  const leftPopup = document.getElementById('conflict-popup-left');
+  const rightPopup = document.getElementById('conflict-popup-right');
+  const app = document.querySelector('.app');
+  if (leftPopup) leftPopup.classList.remove('active');
+  if (rightPopup) rightPopup.classList.remove('active');
+  if (app) app.classList.remove('conflict-popup-right-active');
+  conflictPopupCallback = null;
+}
+
+function confirmConflictActivate() {
+  const leftPopup = document.getElementById('conflict-popup-left');
+  const rightPopup = document.getElementById('conflict-popup-right');
+  const app = document.querySelector('.app');
+  if (leftPopup) leftPopup.classList.remove('active');
+  if (rightPopup) rightPopup.classList.remove('active');
+  if (app) app.classList.remove('conflict-popup-right-active');
+  if (typeof conflictPopupCallback === 'function') {
+    conflictPopupCallback();
+    conflictPopupCallback = null;
+  }
 }
 
 // Trip info carousel functionality

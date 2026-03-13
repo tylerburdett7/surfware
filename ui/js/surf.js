@@ -28,6 +28,31 @@ function initSurfControls() {
   updateSurfDisplay();
   updateSurfStatus();
   updateSurfTabIndicator();
+  updateHomeQuickSurfDisplay();
+}
+
+function updateHomeQuickSurfDisplay() {
+  const el = document.getElementById('quicksurf-status-value');
+  if (!el) return;
+  if (currentSurfSide === 'left') el.textContent = 'LEFT';
+  else if (currentSurfSide === 'right') el.textContent = 'RIGHT';
+  else el.textContent = 'OFF';
+}
+
+function setSurfFromProfile(profile) {
+  if (!profile) return;
+  currentSurfSide = profile.qs === 'off' ? null : profile.qs;
+  if (currentSurfSide && typeof setQuickLaunchOff === 'function') setQuickLaunchOff();
+  if (typeof profile.surftab === 'number') surfTabValue = Math.max(0, Math.min(100, profile.surftab));
+  if (typeof profile.speed === 'number') speedValue = Math.max(0, Math.min(50, profile.speed));
+  updateSurfDisplay();
+  updateSurfStatus();
+  updateSurfTabIndicator();
+  updateHomeQuickSurfDisplay();
+  const leftBtn = document.getElementById('surf-left-btn');
+  const rightBtn = document.getElementById('surf-right-btn');
+  if (leftBtn) leftBtn.classList.toggle('active', currentSurfSide === 'left');
+  if (rightBtn) rightBtn.classList.toggle('active', currentSurfSide === 'right');
 }
 
 function updateSurfTabIndicator() {
@@ -49,19 +74,28 @@ function updateSurfDisplay() {
 }
 
 function selectSurfSide(side) {
+  const turningOn = currentSurfSide !== side;
+  if (turningOn && typeof isQuickLaunchOn === 'function' && isQuickLaunchOn()) {
+    if (typeof showConflictPopup === 'function') {
+      showConflictPopup('qs', () => {
+        if (typeof setQuickLaunchOff === 'function') setQuickLaunchOff();
+        applySurfSide(side);
+      });
+      return;
+    }
+  }
+  applySurfSide(currentSurfSide === side ? null : side);
+}
+
+function applySurfSide(side) {
+  currentSurfSide = side;
   const leftBtn = document.getElementById('surf-left-btn');
   const rightBtn = document.getElementById('surf-right-btn');
-
-  if (currentSurfSide === side) {
-    currentSurfSide = null;
-  } else {
-    currentSurfSide = side;
-  }
-
   if (leftBtn) leftBtn.classList.toggle('active', currentSurfSide === 'left');
   if (rightBtn) rightBtn.classList.toggle('active', currentSurfSide === 'right');
   updateSurfStatus();
   updateSurfTabIndicator();
+  updateHomeQuickSurfDisplay();
 }
 
 function updateSurfStatus() {
@@ -123,9 +157,13 @@ function closeProfilePopup() {
   if (popup) popup.classList.remove('active');
 }
 
-// Load overlay when the page is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', loadSurfOverlay);
-} else {
+function surfInit() {
+  updateHomeQuickSurfDisplay();
   loadSurfOverlay();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', surfInit);
+} else {
+  surfInit();
 }

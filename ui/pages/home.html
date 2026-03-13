@@ -142,11 +142,11 @@
           </div>
         </div>
 
-        <!-- QuickSurf → Volume when surf is active -->
-        <div class="tab-box tab-box--swap" id="tab-box-quicksurf">
+        <!-- QuickSurf → Volume when surf is active (click to open Surf page) -->
+        <div class="tab-box tab-box--swap tab-box--clickable" id="tab-box-quicksurf" onclick="openSurf()" role="button" tabindex="0">
           <div class="tab-face tab-face--normal">
             <div class="tab-label">QuickSurf</div>
-            <div class="tab-value">LEFT</div>
+            <div class="tab-value" id="quicksurf-status-value">OFF</div>
           </div>
           <div class="tab-face tab-face--surf">
             <div class="tab-surf-vol">
@@ -156,20 +156,29 @@
           </div>
         </div>
 
-        <!-- QuickLaunch: stays the same -->
-        <div class="tab-box">
+        <!-- QuickLaunch: click to toggle on/off -->
+        <div class="tab-box tab-box--clickable" id="tab-box-quicklaunch" onclick="toggleQuickLaunch()" role="button" tabindex="0">
           <div class="tab-label">QuickLaunch</div>
-          <div class="tab-value">OFF</div>
+          <div class="tab-value" id="quicklaunch-status-value">OFF</div>
         </div>
 
       </div>
 
     </div>
 
+    <!-- QuickLaunch conflict: shows on left screen when activating QuickLaunch -->
+    <div class="conflict-popup conflict-popup--left" id="conflict-popup-left">
+      <div class="conflict-popup-message" id="conflict-popup-message-left"></div>
+      <div class="conflict-popup-buttons">
+        <button class="conflict-popup-btn conflict-popup-cancel" onclick="cancelConflictPopup()">Cancel</button>
+        <button class="conflict-popup-btn conflict-popup-activate" onclick="confirmConflictActivate()">Activate</button>
+      </div>
+    </div>
+
     <div class="diagnostics-bar">
       <div class="diagnostic-item">
         <span>Depth</span>
-        <strong>18.4 ft</strong>
+        <strong>18.4 FT</strong>
       </div>
       <div class="diagnostic-item">
         <span>Water Temp</span>
@@ -177,11 +186,11 @@
       </div>
       <div class="diagnostic-item">
         <span>Oil Pressure</span>
-        <strong>52 PSI</strong>
+        <strong id="diag-oil">25 PSI</strong>
       </div>
       <div class="diagnostic-item">
         <span>Engine Temp</span>
-        <strong>165°</strong>
+        <strong id="diag-etemp">140°</strong>
       </div>
       <div class="diagnostic-item">
         <span>Battery</span>
@@ -193,6 +202,15 @@
 
   <!-- RIGHT SCREEN -->
   <section class="screen control-screen">
+
+    <!-- QuickSurf conflict: shows on right screen when activating QuickSurf -->
+    <div class="conflict-popup conflict-popup--right" id="conflict-popup-right">
+      <div class="conflict-popup-message" id="conflict-popup-message-right"></div>
+      <div class="conflict-popup-buttons">
+        <button class="conflict-popup-btn conflict-popup-cancel" onclick="cancelConflictPopup()">Cancel</button>
+        <button class="conflict-popup-btn conflict-popup-activate" onclick="confirmConflictActivate()">Activate</button>
+      </div>
+    </div>
 
     <div class="camera-view">LIVE CAMERA</div>
 
@@ -329,6 +347,12 @@
     </div>
     <input type="range" class="throttle-slider" id="throttle-slider"
            min="0" max="100" value="0" oninput="simSetThrottle(this.value)">
+  </div>
+
+  <!-- Sim server status -->
+  <div class="sim-status sim-status--connecting" id="sim-status">
+    <span class="sim-status-dot"></span>
+    <span class="sim-status-label">Connecting…</span>
   </div>
 
 </div>

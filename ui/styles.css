@@ -603,6 +603,7 @@ body {
   grid-template-rows: auto auto;
   column-gap: 12px;
   row-gap: 12px;
+  overflow: visible;
 }
 
 .camera-view {
@@ -860,6 +861,19 @@ body {
   position: relative;
   overflow: hidden;
   min-height: 68px;
+}
+
+.tab-box--clickable {
+  cursor: pointer;
+}
+
+.tab-box--clickable:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.tab-box--clickable.active {
+  background: rgba(212, 165, 51, 0.15);
+  border: 1px solid rgba(212, 165, 51, 0.4);
 }
 
 .tab-face {
@@ -1311,6 +1325,81 @@ body {
 
 .trailer-mode-popup-close:hover {
   color: #e5b847;
+}
+
+/* QuickSurf / QuickLaunch conflict popup */
+.conflict-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(34, 34, 34, 0.97);
+  border: 2px solid rgba(212, 165, 51, 0.5);
+  border-radius: 10px;
+  padding: 20px;
+  z-index: 1100;
+  width: 220px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.conflict-popup.active {
+  display: flex;
+}
+
+.conflict-popup--left {
+  z-index: 100;
+}
+
+/* Right popup: center in content area (between left edge and menu buttons); high z-index so surf overlay doesn't cut it off */
+.conflict-popup--right {
+  z-index: 150;
+  left: calc((100% - 95px - 16px) / 2);
+  transform: translate(-50%, -50%);
+}
+
+/* Allow right popup to show when active (override ancestor overflow) */
+.app.conflict-popup-right-active {
+  overflow: visible;
+}
+
+.conflict-popup-message {
+  color: #ddd;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.conflict-popup-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.conflict-popup-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #666;
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.conflict-popup-btn:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.conflict-popup-activate {
+  border-color: #d4a533;
+  color: #d4a533;
+}
+
+.conflict-popup-activate:hover {
+  background: rgba(212, 165, 51, 0.2);
 }
 
 .gate-section {
@@ -3558,6 +3647,80 @@ body {
   color: #d4a533;
 }
 
+/* ── Ballast times ── */
+.set-bt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.set-bt-list::-webkit-scrollbar { display: none; }
+
+.set-bt-tank {
+  padding: 10px 8px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.set-bt-tank-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.set-bt-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.set-bt-row:last-child { margin-bottom: 0; }
+
+.set-bt-label {
+  font-size: 10px;
+  color: #666;
+  min-width: 44px;
+}
+
+.set-bt-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.set-bt-part {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.set-bt-part .set-adj-btn {
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+}
+
+.set-bt-part span:not(.set-bt-sep) {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d4a533;
+  min-width: 24px;
+  text-align: center;
+}
+
+.set-bt-sep {
+  font-size: 12px;
+  color: #444;
+  margin: 0 2px;
+}
+
 /* ── Diagnostics popup ── */
 .set-diag-overlay {
   display: none;
@@ -3703,4 +3866,58 @@ body {
   background: #d4a533;
   border: none;
   cursor: pointer;
+}
+
+/* ── Sim server status ── */
+.sim-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: center;
+  padding: 4px 0;
+}
+
+.sim-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.sim-status-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: color 0.3s;
+}
+
+.sim-status--connecting .sim-status-dot {
+  background: #c49520;
+  animation: simPulse 1.2s ease-in-out infinite;
+}
+
+.sim-status--connecting .sim-status-label {
+  color: #c49520;
+}
+
+.sim-status--connected .sim-status-dot {
+  background: #3dbb5c;
+}
+
+.sim-status--connected .sim-status-label {
+  color: #3dbb5c;
+}
+
+.sim-status--offline .sim-status-dot {
+  background: #c05050;
+}
+
+.sim-status--offline .sim-status-label {
+  color: #c05050;
+}
+
+@keyframes simPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }

@@ -33,8 +33,9 @@ function setPersist() {
 
 function loadSettingsOverlay() {
   const container = document.getElementById('settings-container');
-  if (!container || container.dataset.loaded) return;
-  fetch('../pages/settings.html')
+  if (!container) return Promise.resolve();
+  if (container.dataset.loaded) return Promise.resolve();
+  return fetch('../pages/settings.html')
     .then(r => r.text())
     .then(html => {
       container.innerHTML = html;
@@ -72,12 +73,13 @@ function openSettings() {
   closeSwitches();
   closeProfiles();
   closeMusic();
-  loadSettingsOverlay();
-  const overlay = document.getElementById('settings-overlay');
-  if (overlay) {
-    overlay.classList.add('active');
-    setShowMain();
-  }
+  loadSettingsOverlay().then(() => {
+    const overlay = document.getElementById('settings-overlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      setShowMain();
+    }
+  });
 }
 
 function closeSettings() {
@@ -89,10 +91,15 @@ function closeSettings() {
 // ─── View switching ────────────────────────────────────────────────────────────
 
 function _setShowView(id) {
-  ['set-main-view', 'set-user-view', 'set-dealer-pin-view', 'set-dealer-view'].forEach(v => {
+  ['set-main-view', 'set-user-view', 'set-dealer-pin-view', 'set-dealer-view', 'set-ballast-times-view'].forEach(v => {
     const el = document.getElementById(v);
     if (el) el.style.display = v === id ? 'flex' : 'none';
   });
+}
+
+function setShowBallastTimes() {
+  _setShowView('set-ballast-times-view');
+  setBTRender();
 }
 
 function setShowMain() {
@@ -220,6 +227,143 @@ function setToggleAmPm() {
     display.textContent = `${setState.hour}:${String(setState.minute).padStart(2,'0')} ${setState.ampm}`;
   }
   setPersist();
+}
+
+// ─── Ballast Times ────────────────────────────────────────────────────────────
+
+const SET_BT_TANKS = [
+  { key: 'bow', label: 'Bow' },
+  { key: 'center', label: 'Center' },
+  { key: 'ramfillPort', label: 'Ramfill Port' },
+  { key: 'ramfillStbd', label: 'Ramfill Stbd' },
+  { key: 'portPnp', label: 'Port PNP' },
+  { key: 'stbdPnp', label: 'Stbd PNP' },
+  { key: 'transom', label: 'Transom' },
+];
+
+const SET_BT_DEFAULT_FILL = 240;
+const SET_BT_DEFAULT_DRAIN = 180;
+
+let setBTState = {};
+let setBTAdjTimer = null;
+let setBTAdjInterval = null;
+let setBTAdjCount = 0;
+
+function setBTLoad() {
+  try {
+    const raw = localStorage.getItem('surf_ballast_times');
+    if (raw) setBTState = JSON.parse(raw);
+  } catch (e) {}
+  SET_BT_TANKS.forEach(t => {
+    if (!setBTState[t.key]) setBTState[t.key] = { fill: SET_BT_DEFAULT_FILL, drain: SET_BT_DEFAULT_DRAIN };
+  });
+}
+
+function setBTPersist() {
+  localStorage.setItem('surf_ballast_times', JSON.stringify(setBTState));
+}
+
+function setBTRender() {
+  setBTLoad();
+  const list = document.getElementById('set-bt-list');
+  if (!list) return;
+
+  list.innerHTML = SET_BT_TANKS.map(t => {
+    const f = setBTState[t.key] || { fill: SET_BT_DEFAULT_FILL, drain: SET_BT_DEFAULT_DRAIN };
+    const fm = Math.floor(f.fill / 60);
+    const fs = f.fill % 60;
+    const dm = Math.floor(f.drain / 60);
+    const ds = f.drain % 60;
+    return `
+      <div class="set-bt-tank">
+        <div class="set-bt-tank-name">${t.label}</div>
+        <div class="set-bt-row">
+          <span class="set-bt-label">Fill</span>
+          <div class="set-bt-time">
+            <span class="set-bt-part">
+              <button class="set-adj-btn" onmousedown="setBTAdjMin('${t.key}','fill',-1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">−</button>
+              <span id="set-bt-${t.key}-fill-min">${fm}</span>
+              <button class="set-adj-btn" onmousedown="setBTAdjMin('${t.key}','fill',1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">+</button>
+            </span>
+            <span class="set-bt-sep">:</span>
+            <span class="set-bt-part">
+              <button class="set-adj-btn" onmousedown="setBTStartSecAdj('${t.key}','fill',-1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">−</button>
+              <span id="set-bt-${t.key}-fill-sec">${String(fs).padStart(2,'0')}</span>
+              <button class="set-adj-btn" onmousedown="setBTStartSecAdj('${t.key}','fill',1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">+</button>
+            </span>
+          </div>
+        </div>
+        <div class="set-bt-row">
+          <span class="set-bt-label">Drain</span>
+          <div class="set-bt-time">
+            <span class="set-bt-part">
+              <button class="set-adj-btn" onmousedown="setBTAdjMin('${t.key}','drain',-1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">−</button>
+              <span id="set-bt-${t.key}-drain-min">${dm}</span>
+              <button class="set-adj-btn" onmousedown="setBTAdjMin('${t.key}','drain',1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">+</button>
+            </span>
+            <span class="set-bt-sep">:</span>
+            <span class="set-bt-part">
+              <button class="set-adj-btn" onmousedown="setBTStartSecAdj('${t.key}','drain',-1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">−</button>
+              <span id="set-bt-${t.key}-drain-sec">${String(ds).padStart(2,'0')}</span>
+              <button class="set-adj-btn" onmousedown="setBTStartSecAdj('${t.key}','drain',1)" onmouseup="setBTStopAdj()" onmouseleave="setBTStopAdj()">+</button>
+            </span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function setBTAdjMin(tankKey, fillOrDrain, dir) {
+  const o = setBTState[tankKey] || { fill: SET_BT_DEFAULT_FILL, drain: SET_BT_DEFAULT_DRAIN };
+  let sec = o[fillOrDrain];
+  sec = Math.max(0, Math.min(3600, sec + dir * 60));
+  setBTState[tankKey] = setBTState[tankKey] || {};
+  setBTState[tankKey][fillOrDrain] = sec;
+  setBTUpdateDisplay(tankKey, fillOrDrain);
+  setBTPersist();
+}
+
+let setBTSecTarget = null;
+
+function setBTStartSecAdj(tankKey, fillOrDrain, dir) {
+  setBTSecTarget = { tankKey, fillOrDrain, dir };
+  setBTDoSecAdj();
+  setBTAdjTimer = setTimeout(() => {
+    setBTAdjCount = 0;
+    setBTAdjInterval = setInterval(setBTDoSecAdj, 60);
+  }, 400);
+}
+
+function setBTDoSecAdj() {
+  if (!setBTSecTarget) return;
+  setBTAdjCount++;
+  const step = setBTAdjCount > 15 ? 5 : 1;
+  const { tankKey, fillOrDrain, dir } = setBTSecTarget;
+  const o = setBTState[tankKey] || { fill: SET_BT_DEFAULT_FILL, drain: SET_BT_DEFAULT_DRAIN };
+  let sec = o[fillOrDrain];
+  sec = Math.max(0, Math.min(3600, sec + dir * step));
+  setBTState[tankKey] = setBTState[tankKey] || {};
+  setBTState[tankKey][fillOrDrain] = sec;
+  setBTUpdateDisplay(tankKey, fillOrDrain);
+  setBTPersist();
+}
+
+function setBTStopAdj() {
+  clearTimeout(setBTAdjTimer);
+  clearInterval(setBTAdjInterval);
+  setBTAdjTimer = null;
+  setBTAdjInterval = null;
+  setBTSecTarget = null;
+}
+
+function setBTUpdateDisplay(tankKey, fillOrDrain) {
+  const sec = (setBTState[tankKey] || {})[fillOrDrain] ?? (fillOrDrain === 'fill' ? SET_BT_DEFAULT_FILL : SET_BT_DEFAULT_DRAIN);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  const minEl = document.getElementById(`set-bt-${tankKey}-${fillOrDrain}-min`);
+  const secEl = document.getElementById(`set-bt-${tankKey}-${fillOrDrain}-sec`);
+  if (minEl) minEl.textContent = m;
+  if (secEl) secEl.textContent = String(s).padStart(2, '0');
 }
 
 // ─── Theme ────────────────────────────────────────────────────────────────────

@@ -251,7 +251,11 @@ function profToggleActivate() {
   } else {
     profState.activeId = profState.viewingId;
     const p = profState.profiles.find(p => p.id === profState.viewingId);
-    if (p) _profSetCruise(true, p.speed);
+    if (p) {
+      _profSetCruise(true, p.speed);
+      if (typeof ballastSetLevels === 'function') ballastSetLevels(p.ballast);
+      if (typeof setSurfFromProfile === 'function') setSurfFromProfile(p);
+    }
   }
 
   profPersist();
@@ -279,6 +283,7 @@ function _profSetCruise(on, speed) {
 
   if (setVal) setVal.textContent = speed.toFixed(1);
   if (typeof cruiseSpeed !== 'undefined') cruiseSpeed = speed;
+  if (typeof simSendCruise === 'function') simSendCruise();
 }
 
 // ─── Edit current ─────────────────────────────────────────────────────────────

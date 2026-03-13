@@ -5,8 +5,9 @@ let musMuted = false;
 
 function loadMusicOverlay() {
   const container = document.getElementById('music-container');
-  if (!container || container.dataset.loaded) return;
-  fetch('../pages/music.html')
+  if (!container) return Promise.resolve();
+  if (container.dataset.loaded) return Promise.resolve();
+  return fetch('../pages/music.html')
     .then(r => r.text())
     .then(html => {
       container.innerHTML = html;
@@ -35,12 +36,13 @@ function openMusic() {
   closeSwitches();
   closeProfiles();
   closeSettings();
-  loadMusicOverlay();
-  const overlay = document.getElementById('music-overlay');
-  if (overlay) {
-    overlay.classList.add('active');
-    musShowMain();
-  }
+  loadMusicOverlay().then(() => {
+    const overlay = document.getElementById('music-overlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      musShowMain();
+    }
+  });
 }
 
 function closeMusic() {
