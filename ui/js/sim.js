@@ -35,6 +35,7 @@ function simConnect() {
   simWS.onopen = () => {
     console.log('Sim connected');
     simSetStatus('connected');
+    simSendState();
   };
 
   simWS.onmessage = (event) => {
@@ -45,6 +46,7 @@ function simConnect() {
   simWS.onclose = () => {
     console.log('Sim disconnected — retrying in 3s');
     simSetStatus('offline');
+    simStopCruiseSync();
     setTimeout(simConnect, 3000);
   };
 
@@ -68,6 +70,20 @@ function simSendCruise() {
   simSendState();
 }
 
+let simCruiseInterval = null;
+
+function simStartCruiseSync() {
+  if (simCruiseInterval) return;
+  simCruiseInterval = setInterval(simSendState, 200);
+}
+
+function simStopCruiseSync() {
+  if (simCruiseInterval) {
+    clearInterval(simCruiseInterval);
+    simCruiseInterval = null;
+  }
+}
+
 function simSendState() {
   if (!simWS || simWS.readyState !== WebSocket.OPEN) return;
 
@@ -80,6 +96,9 @@ function simSendState() {
     cruise_on:   cruiseOn,
     cruise_speed: cruiseSpd,
   }));
+
+  if (cruiseOn) simStartCruiseSync();
+  else simStopCruiseSync();
 }
 
 // ─── Update gauges from server state ─────────────────────────────────────────
