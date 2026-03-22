@@ -130,11 +130,18 @@ function setShowDealer() {
 function setOpenDiag() {
   const el = document.getElementById('set-diag-overlay');
   if (el) el.classList.add('active');
+  if (typeof simLoadStoredCodes === 'function') simLoadStoredCodes();
+  if (typeof simRefreshDiagDisplay === 'function') simRefreshDiagDisplay();
 }
 
 function setCloseDiag() {
   const el = document.getElementById('set-diag-overlay');
   if (el) el.classList.remove('active');
+}
+
+function setDiagTab(view) {
+  document.querySelectorAll('.set-diag-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  if (typeof simRefreshDiagDisplay === 'function') simRefreshDiagDisplay();
 }
 
 // ─── Inspection mode ──────────────────────────────────────────────────────────

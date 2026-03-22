@@ -1,16 +1,25 @@
 {
   "name": "surfware",
   "version": "1.0.0",
-  "description": "Wake boat control system prototype",
+  "description": "Surf boat control system prototype",
   "main": "electron/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "electron:dev": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.surfware.app",
+    "mac": {
+      "target": "dmg"
+    }
   },
   "keywords": [],
   "author": "Tyler Burdett",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^40.0.0"
+    "electron": "^40.8.2",
+    "electron-builder": "^26.8.1"
   }
 }

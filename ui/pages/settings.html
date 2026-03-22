@@ -1,5 +1,7 @@
 <div id="settings-overlay" class="settings-overlay">
 
+  <div class="set-engine-hours">Engine Hours: 80</div>
+
   <!-- ══════════════ MAIN LIST ══════════════ -->
   <div class="set-view" id="set-main-view">
 
@@ -170,8 +172,17 @@
         <div class="set-diag-title">Diagnostics</div>
         <button class="set-diag-close" onclick="setCloseDiag()">✕</button>
       </div>
-      <div class="set-diag-body">
-        <div class="set-diag-empty">No active codes</div>
+      <div class="set-diag-tabs">
+        <button class="set-diag-tab active" data-view="active" onclick="setDiagTab('active')">Active Codes</button>
+        <button class="set-diag-tab" data-view="stored" onclick="setDiagTab('stored')">Stored Codes</button>
+      </div>
+      <div class="set-diag-actions">
+        <button class="set-diag-action-btn" onclick="simClearActiveCodes()">Clear Active Codes</button>
+        <button class="set-diag-action-btn" onclick="simStoreCodes(); setDiagTab('stored');">Store Code</button>
+      </div>
+      <div class="set-diag-body" id="set-diag-body">
+        <div class="set-diag-empty" id="set-diag-empty">No active codes</div>
+        <div class="set-diag-codes" id="set-diag-codes" style="display: none;"></div>
       </div>
     </div>
   </div>

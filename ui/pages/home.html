@@ -12,6 +12,7 @@
   <script src="../js/music.js"></script>
   <script src="../js/settings.js"></script>
   <script src="../js/sim.js"></script>
+  <script src="../js/startup.js"></script>
 </head>
 <body>
 
@@ -22,6 +23,10 @@
   <!-- LEFT SCREEN -->
   <section class="screen info-screen">
 
+    <div class="startup-video-overlay" id="startup-video-left">
+      <video class="startup-video" src="../videos/startup_video.mov" muted playsinline></video>
+    </div>
+
     <img src="../images/centurionlogo.png" alt="Centurion Logo" class="screen-logo">
 
     <div class="profiles-btn-group">
@@ -29,7 +34,12 @@
       <div class="profiles-active-label" id="profiles-active-label"></div>
     </div>
 
-    <div class="top-time">12:42 PM</div>
+    <div class="top-bar">
+      <span class="top-time">12:42 PM</span>
+      <div class="check-engine-light" id="check-engine-light" style="display: none;" title="Check engine">
+        <span class="check-engine-text">CHECK<br>ENGINE</span>
+      </div>
+    </div>
 
     <div class="gauges">
 
@@ -142,11 +152,18 @@
           </div>
         </div>
 
-        <!-- QuickSurf → Volume when surf is active (click to open Surf page) -->
-        <div class="tab-box tab-box--swap tab-box--clickable" id="tab-box-quicksurf" onclick="openSurf()" role="button" tabindex="0">
+        <!-- QuickSurf: toggle on/off here; L/R buttons when on (Surf page opens from nav) -->
+        <div class="tab-box tab-box--swap tab-box--clickable" id="tab-box-quicksurf" onclick="toggleQuickSurfFromHome(event)">
           <div class="tab-face tab-face--normal">
             <div class="tab-label">QuickSurf</div>
-            <div class="tab-value" id="quicksurf-status-value">OFF</div>
+            <div class="quicksurf-controls" id="quicksurf-controls">
+              <div class="tab-value quicksurf-value" id="quicksurf-off">OFF</div>
+              <div class="quicksurf-on-row" id="quicksurf-side-btns" style="display: none;">
+                <button class="quicksurf-side-btn" id="quicksurf-left-btn" onclick="selectSurfSideFromHome('left', event)">◀</button>
+                <span class="tab-value quicksurf-value">ON</span>
+                <button class="quicksurf-side-btn" id="quicksurf-right-btn" onclick="selectSurfSideFromHome('right', event)">▶</button>
+              </div>
+            </div>
           </div>
           <div class="tab-face tab-face--surf">
             <div class="tab-surf-vol">
@@ -202,6 +219,10 @@
 
   <!-- RIGHT SCREEN -->
   <section class="screen control-screen">
+
+    <div class="startup-video-overlay" id="startup-video-right">
+      <video class="startup-video" src="../videos/startup_video.mov" muted playsinline></video>
+    </div>
 
     <!-- QuickSurf conflict: shows on right screen when activating QuickSurf -->
     <div class="conflict-popup conflict-popup--right" id="conflict-popup-right">
@@ -339,14 +360,20 @@
 
   </div> <!-- end .screens-row -->
 
-  <!-- THROTTLE — below both screens, simulates physical lever -->
-  <div class="throttle-control">
+  <!-- Throttle row: error sim button (left), throttle (center) -->
+  <div class="throttle-row">
+    <div class="throttle-row-left">
+      <button class="error-sim-btn" id="error-sim-btn" onclick="simStartErrorSim()">Run Error Simulation</button>
+    </div>
+    <div class="throttle-control">
     <div class="throttle-header">
       <span class="throttle-label">THROTTLE</span>
       <span class="throttle-pct" id="throttle-pct">0%</span>
     </div>
     <input type="range" class="throttle-slider" id="throttle-slider"
            min="0" max="100" value="0" oninput="simSetThrottle(this.value)">
+    </div>
+    <div class="throttle-row-right"></div>
   </div>
 
   <!-- Sim server status -->

@@ -32,11 +32,14 @@ function initSurfControls() {
 }
 
 function updateHomeQuickSurfDisplay() {
-  const el = document.getElementById('quicksurf-status-value');
-  if (!el) return;
-  if (currentSurfSide === 'left') el.textContent = 'LEFT';
-  else if (currentSurfSide === 'right') el.textContent = 'RIGHT';
-  else el.textContent = 'OFF';
+  const offEl = document.getElementById('quicksurf-off');
+  const btnsEl = document.getElementById('quicksurf-side-btns');
+  const leftBtn = document.getElementById('quicksurf-left-btn');
+  const rightBtn = document.getElementById('quicksurf-right-btn');
+  if (offEl) offEl.style.display = currentSurfSide ? 'none' : '';
+  if (btnsEl) btnsEl.style.display = currentSurfSide ? 'flex' : 'none';
+  if (leftBtn) leftBtn.classList.toggle('active', currentSurfSide === 'left');
+  if (rightBtn) rightBtn.classList.toggle('active', currentSurfSide === 'right');
 }
 
 function setSurfFromProfile(profile) {

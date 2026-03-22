@@ -1,16 +1,35 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width: 1440,
+    height: 900,
+    backgroundColor: '#000000',
     webPreferences: {
-      preload: path.join(__dirname, "preload.js")
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true
     }
   });
 
-  win.loadFile(path.join(__dirname, "../ui/pages/home.html"));
+  // Load the main UI HTML
+  win.loadFile(path.join(__dirname, '../ui/pages/home.html'));
+
+  win.setMenuBarVisibility(false);
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});

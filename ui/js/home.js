@@ -174,6 +174,32 @@ function closeAll() {
   closeSettings();
 }
 
+// ─── QuickSurf from left screen (toggle + L/R, does NOT open Surf page) ────────
+
+function toggleQuickSurfFromHome(event) {
+  if (typeof currentSurfSide === 'undefined') return;
+  if (currentSurfSide) {
+    if (event && event.target.closest('.quicksurf-side-btn')) return;
+    if (typeof applySurfSide === 'function') applySurfSide(null);
+    return;
+  }
+  if (event && event.target.closest('.quicksurf-side-btn')) return;
+  if (typeof isQuickLaunchOn === 'function' && isQuickLaunchOn()) {
+    showConflictPopup('qs', () => {
+      if (typeof setQuickLaunchOff === 'function') setQuickLaunchOff();
+      if (typeof applySurfSide === 'function') applySurfSide('left');
+    });
+    return;
+  }
+  if (typeof applySurfSide === 'function') applySurfSide('left');
+}
+
+function selectSurfSideFromHome(side, event) {
+  if (event) event.stopPropagation();
+  if (typeof selectSurfSide === 'function') selectSurfSide(side);
+}
+
+
 // ─── QuickLaunch (mutually exclusive with QuickSurf) ───────────────────────────
 
 let quickLaunchOn = false;
