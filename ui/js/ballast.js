@@ -69,8 +69,11 @@ function ballastInitState() {
 
 function ballastRender() {
   TANK_KEYS.forEach(key => {
+    const pct = Math.round(ballastState[key] ?? 0);
     const el = document.querySelector('.' + TANK_KEY_TO_ID[key]);
-    if (el) el.textContent = Math.round(ballastState[key]);
+    if (el) el.textContent = pct;
+    const homeEl = document.querySelector(`#trip-carousel [data-ballast-key="${key}"]`);
+    if (homeEl) homeEl.textContent = pct + '%';
   });
 }
 
@@ -220,12 +223,18 @@ function loadBallastOverlay() {
     .then(r => r.text())
     .then(html => {
       const container = document.getElementById('ballast-container');
+      if (!container) return;
       container.innerHTML = html;
-      ballastInitState();
-      ballastRender();
       ballastWireButtons();
+      ballastRender();
     })
     .catch(e => console.error('Error loading ballast overlay:', e));
+}
+
+function ballastBoot() {
+  ballastInitState();
+  ballastRender();
+  loadBallastOverlay();
 }
 
 function ballastWireButtons() {
@@ -245,9 +254,9 @@ function ballastWireButtons() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', loadBallastOverlay);
+  document.addEventListener('DOMContentLoaded', ballastBoot);
 } else {
-  loadBallastOverlay();
+  ballastBoot();
 }
 
 // ─── Selection (unchanged) ────────────────────────────────────────────────────

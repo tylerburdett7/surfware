@@ -290,31 +290,31 @@
             <div class="ballast-grid">
               <div class="ballast-item">
                 <div class="ballast-name">Ramfill P</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="ramfillPort">0%</div>
               </div>
               <div class="ballast-item">
                 <div class="ballast-name">Ramfill S</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="ramfillStbd">0%</div>
               </div>
               <div class="ballast-item">
                 <div class="ballast-name">Transom</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="transom">0%</div>
               </div>
               <div class="ballast-item">
                 <div class="ballast-name">Center</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="center">0%</div>
               </div>
               <div class="ballast-item">
                 <div class="ballast-name">Bow</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="bow">0%</div>
               </div>
               <div class="ballast-item">
                 <div class="ballast-name">Port PNP</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="portPnp">0%</div>
               </div>
               <div class="ballast-item">
                 <div class="ballast-name">Stbd PNP</div>
-                <div class="ballast-percent">25%</div>
+                <div class="ballast-percent" data-ballast-key="stbdPnp">0%</div>
               </div>
             </div>
           </div>
@@ -381,6 +381,183 @@
     <span class="sim-status-dot"></span>
     <span class="sim-status-label">Connecting…</span>
   </div>
+
+  <article class="project-docs" aria-label="Project documentation">
+    <header class="project-docs-header">
+      <p class="project-docs-meta">Wakeboat Software Prototype · CSE 499 – Senior Project</p>
+      <h1 class="project-docs-title">Centurion Ri245 Control Interface</h1>
+      <p class="project-docs-author">Tyler Burdett</p>
+    </header>
+
+    <section class="project-docs-section">
+      <h2>Introduction and purpose</h2>
+      <p>Modern wakeboats rely on highly integrated digital control systems that manage ballast, surf configuration, throttle control, engine monitoring, audio systems, and onboard electronics. Those systems coordinate many variables in real time behind a clear, usable interface.</p>
+      <p>This project is a desktop-based Electron application that models the structure and behavior of software found on the <strong>Centurion Ri245</strong>. That model was chosen because of direct experience with the boat at a dealership that sold and serviced them, including familiarity with its dual-screen helm layout and day-to-day workflow.</p>
+      <p>The application replicates a dual-screen control interface similar to the real Ri245 design. It simulates operational data—RPM, speed, fuel level, ballast levels, surf configuration, and alerts—and demonstrates modular architecture, event-driven programming, and centralized state management.</p>
+      <p><strong>Purpose:</strong> design and implement a realistic wakeboat control software prototype with interactive simulation, packaged as a downloadable desktop application.</p>
+    </section>
+
+    <section class="project-docs-section">
+      <h2>About the Centurion RI245</h2>
+      <p>The Centurion RI245 is a top of the line wakeboat producing one of the best and most customizable surf waves in the industry. The RI series from centurion has been around since 2016 and has only gotten better every year since. One of the most recognizable features of the RI series is the dual screen design which allows for a lot of customization and ease of use. My goal with this software was to enhance the experience of the dual screen design with a more simple and clean interface that makes it easier to navigate and use the boat.</p>
+      <p>This software prototype is made for the Centurion RI245 utilizing the dual screens and features only found on the three RI Models from Centurion. It is a student simulation—not OEM firmware—and is only intended to illustrate how such a system can be structured.</p>
+
+      <div class="project-docs-photos" role="group" aria-label="Boat photography">
+        <figure class="project-docs-photo-slot">
+          <div class="project-docs-photo-frame">
+            <img src="../images/2026_Centurion_Ri245.jpg" alt="Centurion Ri245" width="1200" height="675" loading="lazy">
+          </div>
+        </figure>
+        <figure class="project-docs-photo-slot">
+          <div class="project-docs-photo-frame">
+            <img src="../images/2026_Centurion_Ri245_dash.jpg" alt="Centurion Ri245" width="1200" height="675" loading="lazy">
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="project-docs-section">
+      <h2>Must-have requirements</h2>
+
+      <div class="project-docs-req">
+        <h3>1. Dual-screen control interface</h3>
+        <p><strong>Requirement:</strong> Implement a dual-screen user interface modeled after the Centurion Ri245 helm layout. The interface will allow control of: ballast systems; surf systems; throttle; engine monitoring; electronics; audio controls.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> During demonstration, show that all major boat systems are accessible through the UI and respond immediately to user interaction without reloading the application.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>2. Operational simulation engine</h3>
+        <p><strong>Requirement:</strong> Implement a simulation engine that allows throttle control and simulated driving behavior. The system will: accept throttle input; simulate RPM changes; simulate speed changes; update dashboard values dynamically based on simulation data.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> When throttle input is adjusted, RPM and speed values update in real time. Simulation values change continuously while throttle position changes.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>3. Saved rider profiles</h3>
+        <p><strong>Requirement:</strong> Allow users to create, save, and load preset profiles that contain saved ballast and surf settings.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> Demonstrate: creating a new profile; saving configuration data; restarting the application; loading the saved profile; observing that ballast and surf settings are restored correctly. Profiles must persist between application sessions.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>4. Settings page with dealer access lock</h3>
+        <p><strong>Requirement:</strong> Implement a settings page with two access levels: user settings (theme selection and interface preferences); dealer settings (model selection, features enabled) protected by an access code.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> Demonstrate: correct code unlocks dealer settings; incorrect code denies access; theme changes update the interface immediately.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>5. Electron desktop application deployment</h3>
+        <p><strong>Requirement:</strong> Build and package the software as a downloadable Electron desktop application.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> Install and run the application locally on a desktop machine without requiring a web server or internet connection.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>6. Real-time system monitoring dashboard</h3>
+        <p><strong>Requirement:</strong> Implement a consolidated system dashboard that displays: speed; RPM; fuel level; ballast fill levels; active surf configuration; warnings in the software when things go wrong in simulations.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> During simulation, all dashboard values update continuously and remain synchronized with the internal system state. Run simulations that have engine issues causing the software to alert the user.</p>
+      </div>
+    </section>
+
+    <section class="project-docs-section">
+      <h2>Stretch requirements</h2>
+
+      <div class="project-docs-req">
+        <h3>1. Advanced alert and fault simulation</h3>
+        <p><strong>Requirement:</strong> Simulate system warnings such as: engine codes; Guardian mode which limits the boat’s speed to prevent damage.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> Trigger predefined thresholds and demonstrate that visual alerts appear when limits are exceeded.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>2. Multi-profile comparison</h3>
+        <p><strong>Requirement:</strong> Allow two saved profiles to be displayed side-by-side for comparison.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> Load two profiles simultaneously and show clear differences in configuration values.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>3. Simulation data export</h3>
+        <p><strong>Requirement:</strong> Allow exporting simulation session data to a CSV file.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> Demonstrate exporting a file containing timestamped RPM and speed values.</p>
+      </div>
+
+      <div class="project-docs-req">
+        <h3>4. More customizable software</h3>
+        <p><strong>Requirement:</strong> Make the software more customizable so the user can change the layout, place elements where they want, and set it up in a way that makes sense to them.</p>
+        <p class="project-docs-success"><strong>Success measure:</strong> The user can move items around on the pages and make it look how they want to without affecting the functionality of the software.</p>
+      </div>
+    </section>
+
+    <section class="project-docs-section">
+      <h2>Overview of the product</h2>
+
+      <h3>Workflow</h3>
+      <ol class="project-docs-list">
+        <li>User launches the Electron desktop application.</li>
+        <li>Dual-screen interface loads.</li>
+        <li>User configures ballast and surf settings.</li>
+        <li>User adjusts throttle to simulate driving.</li>
+        <li>Simulation engine processes input.</li>
+        <li>Dashboard updates RPM, speed, and system data.</li>
+        <li>User may save configuration as a profile.</li>
+        <li>User may access the settings page.</li>
+      </ol>
+
+      <h3>Resources</h3>
+      <ul class="project-docs-list">
+        <li>Electron for desktop packaging</li>
+        <li>HTML, CSS, and JavaScript for frontend architecture</li>
+        <li>Node.js runtime</li>
+        <li>Python for simulation</li>
+      </ul>
+      <p>The architecture is modular, component-based, and uses centralized state management.</p>
+
+      <h3>Data at rest</h3>
+      <ul class="project-docs-list">
+        <li>Rider profiles stored through local storage (including when running as a desktop app in Electron).</li>
+        <li>Application settings stored locally.</li>
+      </ul>
+
+      <h3>Data on the wire</h3>
+      <p>All processing occurs locally within the Electron runtime. No external transmission is required.</p>
+
+      <h3>Data state</h3>
+      <p>A centralized state service stores: boat configuration state; simulation state; user session state.</p>
+      <p class="project-docs-flow">User input → State update → Simulation recalculation → UI render.</p>
+
+      <h3>GUI (HMI / HCI)</h3>
+      <ul class="project-docs-list">
+        <li>Left screen: driving interface (speed, RPM, throttle visualization).</li>
+        <li>Right screen: ballast, surf, electronics, and settings.</li>
+        <li>System dashboard with real-time data.</li>
+      </ul>
+      <p>Mockups or screenshots are included in the final submission.</p>
+    </section>
+
+    <section class="project-docs-section">
+      <h2>Verification</h2>
+
+      <h3>Demo plan</h3>
+      <p>Demonstrate using the boat software as someone would if it were installed in a boat on the water, showing that everything is accounted for. Main items to show:</p>
+      <ul class="project-docs-list">
+        <li>Launching the desktop application</li>
+        <li>Navigating the dual-screen interface</li>
+        <li>Adjusting ballast and surf systems</li>
+        <li>Simulating throttle input</li>
+        <li>Observing real-time RPM and speed updates</li>
+        <li>Saving and loading profiles</li>
+        <li>Unlocking dealer settings</li>
+        <li>Triggering simulated situations</li>
+      </ul>
+
+      <h3>Testing</h3>
+      <p>Each requirement will be verified through live functional testing. Tests include: UI responsiveness; simulation logic within defined ranges; state consistency across components; dealer access control validation; desktop packaging functionality.</p>
+      <p>A requirement is considered fulfilled when it can be demonstrated live without inspecting the source code.</p>
+
+      <h3>Sources / resources</h3>
+      <ul class="project-docs-list project-docs-sources">
+        <li>Electron Documentation</li>
+        <li>Python Documentation</li>
+        <li>Node.js Documentation</li>
+      </ul>
+    </section>
+  </article>
 
 </div>
 

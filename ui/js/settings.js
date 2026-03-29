@@ -63,6 +63,10 @@ function _setApplyState() {
     const btn = document.getElementById(`set-model-${m}`);
     if (btn) btn.classList.toggle('active', m === setState.model);
   });
+
+  // Theme label
+  const label = document.getElementById('set-theme-current');
+  if (label) label.textContent = SET_THEME_LABELS[setState.theme || 'centurion'];
 }
 
 // ─── Open / close ──────────────────────────────────────────────────────────────
@@ -91,7 +95,7 @@ function closeSettings() {
 // ─── View switching ────────────────────────────────────────────────────────────
 
 function _setShowView(id) {
-  ['set-main-view', 'set-user-view', 'set-dealer-pin-view', 'set-dealer-view', 'set-ballast-times-view'].forEach(v => {
+  ['set-main-view', 'set-user-view', 'set-dealer-pin-view', 'set-dealer-view', 'set-ballast-times-view', 'set-theme-view'].forEach(v => {
     const el = document.getElementById(v);
     if (el) el.style.display = v === id ? 'flex' : 'none';
   });
@@ -375,8 +379,175 @@ function setBTUpdateDisplay(tankKey, fillOrDrain) {
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 
-function setChangeTheme() {
-  // Placeholder — cycle body class for future theme support
+const SET_THEMES = ['centurion', 'dark', 'light'];
+const SET_THEME_LABELS = { centurion: 'Centurion', dark: 'Dark', light: 'Light' };
+
+const ACCENT_COLORS = [
+  { id: 'red',     hex: '#c41e1e' },
+  { id: 'orange',  hex: '#ffa500' },
+  { id: 'yellow',  hex: '#ffd700' },
+  { id: 'gold',    hex: '#d4a533' },
+  { id: 'green',   hex: '#32cd32' },
+  { id: 'teal',    hex: '#008080' },
+  { id: 'cyan',    hex: '#00ffff' },
+  { id: 'blue',    hex: '#1e90ff' },
+  { id: 'navy',    hex: '#000080' },
+  { id: 'purple',  hex: '#9932cc' },
+  { id: 'pink',    hex: '#ff69b4' },
+  { id: 'white',   hex: '#c0c0c0' },
+];
+
+function setShowThemePicker() {
+  _setShowView('set-theme-view');
+  _setRenderThemeChecks();
+  document.querySelectorAll('.set-accent-picker').forEach(p => p.classList.remove('open'));
+}
+
+function setApplyTheme(theme) {
+  if (!SET_THEMES.includes(theme)) theme = 'centurion';
+  setState.theme = theme;
+  setPersist();
+
+  if (theme === 'centurion') {
+    delete document.body.dataset.theme;
+  } else {
+    document.body.dataset.theme = theme;
+  }
+
+  _setClearAccentOverrides();
+  if (theme !== 'centurion') _setApplyAccent(theme);
+
+  document.querySelectorAll('.set-accent-picker').forEach(p => p.classList.remove('open'));
+
+  const label = document.getElementById('set-theme-current');
+  if (label) label.textContent = SET_THEME_LABELS[theme];
+  _setRenderThemeChecks();
+}
+
+function _setRenderThemeChecks() {
+  const current = setState.theme || 'centurion';
+  SET_THEMES.forEach(t => {
+    const el = document.getElementById('set-theme-check-' + t);
+    if (el) el.textContent = t === current ? '✓' : '';
+  });
+}
+
+function _setBootTheme() {
+  const theme = setState.theme || 'centurion';
+  if (theme !== 'centurion') {
+    document.body.dataset.theme = theme;
+    _setApplyAccent(theme);
+  } else {
+    delete document.body.dataset.theme;
+  }
+}
+
+// ─── Accent customization ─────────────────────────────────────────────────────
+
+const ACCENT_PROPS = [
+  { key: 'accent',  label: 'Accent 1' },
+  { key: 'accent2', label: 'Accent 2' },
+];
+
+function _accentStateKey(theme, propKey) {
+  return theme + propKey.charAt(0).toUpperCase() + propKey.slice(1);
+}
+
+function setToggleAccentPicker(theme) {
+  const picker = document.getElementById('set-accent-picker-' + theme);
+  if (!picker) return;
+  const wasOpen = picker.classList.contains('open');
+  document.querySelectorAll('.set-accent-picker').forEach(p => p.classList.remove('open'));
+  if (!wasOpen) {
+    _setRenderAccentSwatches(theme);
+    picker.classList.add('open');
+  }
+}
+
+function _setRenderAccentSwatches(theme) {
+  const picker = document.getElementById('set-accent-picker-' + theme);
+  if (!picker) return;
+
+  picker.innerHTML = ACCENT_PROPS.map(prop => {
+    const stateKey = _accentStateKey(theme, prop.key);
+    const current = setState[stateKey] || null;
+    const swatches = ACCENT_COLORS.map(c => {
+      const sel = c.id === current ? ' selected' : '';
+      return `<button class="set-accent-swatch${sel}" style="background:${c.hex}" onclick="event.stopPropagation(); setPickAccent('${theme}','${prop.key}','${c.id}')" title="${c.id}"></button>`;
+    }).join('');
+    return `<div class="set-accent-row"><span class="set-accent-label">${prop.label}</span><div class="set-accent-swatches">${swatches}</div></div>`;
+  }).join('');
+}
+
+function setPickAccent(theme, propKey, colorId) {
+  const stateKey = _accentStateKey(theme, propKey);
+  setState[stateKey] = colorId;
+  setPersist();
+
+  const currentTheme = setState.theme || 'centurion';
+  if (currentTheme !== theme) {
+    setApplyTheme(theme);
+  } else {
+    _setApplyAccent(theme);
+  }
+  _setRenderAccentSwatches(theme);
+}
+
+function _setClearAccentOverrides() {
+  ['--accent','--accent-hover','--panel-border',
+   '--accent2','--accent2-dark','--accent2-hover','--accent2-hover-dark',
+   '--gauge-fill','--menu-btn','--menu-btn-hover'].forEach(p => {
+    document.body.style.removeProperty(p);
+  });
+}
+
+function _setApplyAccent(theme) {
+  _setClearAccentOverrides();
+
+  const accentId  = setState[_accentStateKey(theme, 'accent')];
+  const accent2Id = setState[_accentStateKey(theme, 'accent2')];
+
+  if (accentId) {
+    const c = ACCENT_COLORS.find(x => x.id === accentId);
+    if (c) {
+      const accent = theme === 'dark' ? c.hex : _setDarken(c.hex, 0.2);
+      const hover  = theme === 'dark' ? _setLighten(c.hex, 0.2) : _setDarken(c.hex, 0.05);
+      const [r,g,b] = _setHexToRgb(accent);
+      document.body.style.setProperty('--accent', accent);
+      document.body.style.setProperty('--accent-hover', hover);
+      document.body.style.setProperty('--panel-border', `rgba(${r},${g},${b},0.25)`);
+    }
+  }
+
+  if (accent2Id) {
+    const c = ACCENT_COLORS.find(x => x.id === accent2Id);
+    if (c) {
+      const base   = theme === 'dark' ? c.hex : _setDarken(c.hex, 0.1);
+      const dark   = _setDarken(base, 0.3);
+      const hover  = _setLighten(base, 0.15);
+      const hDark  = _setDarken(base, 0.15);
+      document.body.style.setProperty('--accent2', base);
+      document.body.style.setProperty('--accent2-dark', dark);
+      document.body.style.setProperty('--accent2-hover', hover);
+      document.body.style.setProperty('--accent2-hover-dark', hDark);
+    }
+  }
+}
+
+function _setHexToRgb(hex) {
+  return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+}
+
+function _setLighten(hex, amt) {
+  const [r,g,b] = _setHexToRgb(hex);
+  const c = v => Math.max(0, Math.min(255, Math.round(v + (255 - v) * amt)));
+  return '#' + [c(r),c(g),c(b)].map(v => v.toString(16).padStart(2,'0')).join('');
+}
+
+function _setDarken(hex, amt) {
+  const [r,g,b] = _setHexToRgb(hex);
+  const c = v => Math.max(0, Math.min(255, Math.round(v * (1 - amt))));
+  return '#' + [c(r),c(g),c(b)].map(v => v.toString(16).padStart(2,'0')).join('');
 }
 
 // ─── Dealer PIN ───────────────────────────────────────────────────────────────
@@ -426,4 +597,12 @@ function setSelectModel(model) {
     const btn = document.getElementById(`set-model-${m}`);
     if (btn) btn.classList.toggle('active', m === model);
   });
+}
+
+// ─── Boot: apply saved theme as early as possible ─────────────────────────────
+setLoad();
+if (document.body) {
+  _setBootTheme();
+} else {
+  document.addEventListener('DOMContentLoaded', _setBootTheme);
 }

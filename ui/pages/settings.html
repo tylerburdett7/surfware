@@ -62,9 +62,9 @@
       </div>
 
       <!-- Change Theme -->
-      <div class="set-row set-row--link" onclick="setChangeTheme()">
-        <span class="set-row-label">Change Theme</span>
-        <span class="set-row-chevron">›</span>
+      <div class="set-row set-row--link" onclick="setShowThemePicker()">
+        <span class="set-row-label">Theme</span>
+        <span class="set-theme-current" id="set-theme-current">Centurion</span>
       </div>
 
     </div>
@@ -163,6 +163,41 @@
         <button class="set-numpad-btn set-numpad-btn--sm set-clock-done-btn" onclick="setClockDone()">Set</button>
       </div>
     </div>
+  </div>
+
+  <!-- ══════════════ THEME PICKER ══════════════ -->
+  <div class="set-view" id="set-theme-view" style="display:none">
+
+    <div class="set-nav-row">
+      <button class="set-back-btn" onclick="setShowUser()">← Back</button>
+      <div class="set-view-title">Theme</div>
+    </div>
+
+    <div class="set-list">
+      <div class="set-row set-row--link" onclick="setApplyTheme('centurion')">
+        <span class="set-row-label">Centurion</span>
+        <span class="set-theme-check" id="set-theme-check-centurion">✓</span>
+      </div>
+
+      <div class="set-row set-row--link" onclick="setApplyTheme('dark')">
+        <span class="set-row-label">Dark</span>
+        <div class="set-theme-row-right">
+          <button class="set-accent-toggle" onclick="event.stopPropagation(); setToggleAccentPicker('dark')">Customize</button>
+          <span class="set-theme-check" id="set-theme-check-dark"></span>
+        </div>
+      </div>
+      <div class="set-accent-picker" id="set-accent-picker-dark"></div>
+
+      <div class="set-row set-row--link" onclick="setApplyTheme('light')">
+        <span class="set-row-label">Light</span>
+        <div class="set-theme-row-right">
+          <button class="set-accent-toggle" onclick="event.stopPropagation(); setToggleAccentPicker('light')">Customize</button>
+          <span class="set-theme-check" id="set-theme-check-light"></span>
+        </div>
+      </div>
+      <div class="set-accent-picker" id="set-accent-picker-light"></div>
+    </div>
+
   </div>
 
   <!-- ══════════════ DIAGNOSTICS POPUP ══════════════ -->

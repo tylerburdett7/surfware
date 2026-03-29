@@ -26,7 +26,7 @@ ETEMP_COLD_START   = 140
 ETEMP_OVERHEAT_CODE = 210
 ETEMP_OVERHEAT_MAX  = 220
 
-# Diagnostic codes (PCM-style for marine engines)
+# Diagnostic codes
 DTC_CODES = {
     'P0217': {
         'desc': 'Engine Coolant Over Temperature',
