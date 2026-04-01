@@ -1,14 +1,23 @@
 <div id="ballast-overlay" class="ballast-overlay">
-  <!-- Ramfill Status - Top Left -->
-  <div class="ramfill-status">
+  <!-- Ramfill Status - Top Left (hidden until ramfill tanks are active) -->
+  <div class="ramfill-status" style="display:none">
     <div>Ramfill status:</div>
-    <div class="status-text">increase speed</div>
+    <div class="status-text"></div>
   </div>
   
   <div class="ballast-controls">
     <button class="ballast-action fill-all">▲<br>FILL ALL</button>
     <button class="ballast-action stop-all">⏹<br>STOP ALL</button>
     <button class="ballast-action drain-all">▼<br>DRAIN ALL</button>
+    <div class="set-all-wrap">
+      <button class="ballast-action set-all-btn" id="set-all-btn" onclick="ballastToggleSetAll()">SET ALL TO</button>
+      <div class="set-all-panel" id="set-all-panel">
+        <button class="set-all-adj" onmousedown="ballastSetAllStart(-1)" onmouseup="ballastSetAllStop()" onmouseleave="ballastSetAllStop()">−</button>
+        <span class="set-all-pct" id="set-all-pct">0%</span>
+        <button class="set-all-adj" onmousedown="ballastSetAllStart(1)" onmouseup="ballastSetAllStop()" onmouseleave="ballastSetAllStop()">+</button>
+        <button class="set-all-confirm" onclick="ballastConfirmSetAll()">SET</button>
+      </div>
+    </div>
   </div>
   
   <!-- Trailer Mode Button - Bottom Right -->
@@ -58,5 +67,14 @@
     <button class="tank-panel-btn fill-btn">▲ FILL</button>
     <button class="tank-panel-btn stop-btn">⏹ STOP</button>
     <button class="tank-panel-btn drain-btn">▼ DRAIN</button>
+    <div class="tank-set-wrap" id="tank-set-wrap">
+      <button class="tank-panel-btn tank-set-btn" id="tank-set-btn" onclick="tankToggleSetTo()">SET TO</button>
+      <div class="tank-set-controls" id="tank-set-controls">
+        <button class="set-all-adj tank-set-adj" onmousedown="tankSetToStart(-1)" onmouseup="tankSetToStop()" onmouseleave="tankSetToStop()">−</button>
+        <span class="set-all-pct tank-set-pct" id="tank-set-pct">0%</span>
+        <button class="set-all-adj tank-set-adj" onmousedown="tankSetToStart(1)" onmouseup="tankSetToStop()" onmouseleave="tankSetToStop()">+</button>
+        <button class="set-all-confirm" onclick="tankConfirmSetTo()">SET</button>
+      </div>
+    </div>
   </div>
 </div>

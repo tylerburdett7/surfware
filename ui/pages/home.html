@@ -136,7 +136,11 @@
         <div class="tab-box tab-box--swap" id="tab-box-center">
           <div class="tab-face tab-face--normal">
             <div class="tab-label">Center Tab</div>
-            <div class="tab-value">35%</div>
+            <div class="tab-adj-row">
+              <button class="tab-adj-btn" onclick="adjCenterTab(-1)">−</button>
+              <div class="tab-value" id="center-tab-value">35</div>
+              <button class="tab-adj-btn" onclick="adjCenterTab(1)">+</button>
+            </div>
           </div>
           <div class="tab-face tab-face--surf">
             <div class="tab-surf-title">Slipfast</div>
@@ -263,26 +267,26 @@
         <div class="carousel-inner">
           <!-- Slide 1: Trip Data -->
           <div class="carousel-slide trip-data-slide active">
-            <button class="reset-button">RESET</button>
+            <button class="reset-button" onclick="tripReset()">RESET</button>
             <div class="trip-info-item">
               <span>Trip Time</span>
-              <strong>2:45</strong>
+              <strong id="trip-time">0:00</strong>
             </div>
             <div class="trip-info-item">
               <span>Fuel Avg</span>
-              <strong>12.5 mpg</strong>
+              <strong id="trip-fuel-avg">0.0 mpg</strong>
             </div>
             <div class="trip-info-item">
               <span>Fuel Used</span>
-              <strong>3.2 gal</strong>
+              <strong id="trip-fuel-used">0.0 gal</strong>
             </div>
             <div class="trip-info-item">
               <span>Trip Distance</span>
-              <strong>40.0 mi</strong>
+              <strong id="trip-distance">0.0 mi</strong>
             </div>
             <div class="trip-info-item">
               <span>Fuel Rate</span>
-              <strong>8.5 gph</strong>
+              <strong id="trip-fuel-rate">0.0 gph</strong>
             </div>
           </div>
           <!-- Slide 2: Ballast Levels -->

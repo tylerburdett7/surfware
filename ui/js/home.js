@@ -1,3 +1,89 @@
+let centerTabPct = 35;
+
+// ─── Trip tracking ───────────────────────────────────────────────────────────
+
+const FUEL_TANK_GAL = 65;
+let tripSeconds = 0;
+let tripDistanceMi = 0;
+let tripFuelUsedGal = 0;
+let tripInterval = null;
+let tripFuelLevel = 68;
+
+function tripStart() {
+  if (tripInterval) return;
+  tripInterval = setInterval(tripTick, 1000);
+}
+
+function tripTick() {
+  const speed = typeof simCurrentSpeed !== 'undefined' ? simCurrentSpeed : 0;
+
+  tripSeconds++;
+
+  const hourFraction = 1 / 3600;
+  tripDistanceMi += speed * hourFraction;
+
+  const fuelRateGph = _tripFuelRate(speed);
+  const fuelThisTick = fuelRateGph * hourFraction;
+  tripFuelUsedGal += fuelThisTick;
+
+  tripFuelLevel = Math.max(0, tripFuelLevel - (fuelThisTick / FUEL_TANK_GAL) * 100);
+  _tripUpdateFuelGauge();
+
+  _tripUpdateDisplay();
+}
+
+function _tripFuelRate(speed) {
+  if (speed < 0.5) return 1.5;
+  if (speed <= 10) return 3 + speed * 0.3;
+  if (speed <= 25) return 6 + (speed - 10) * 0.6;
+  return 15 + (speed - 25) * 0.8;
+}
+
+function _tripUpdateDisplay() {
+  const hrs = Math.floor(tripSeconds / 3600);
+  const mins = Math.floor((tripSeconds % 3600) / 60);
+  const timeEl = document.getElementById('trip-time');
+  if (timeEl) timeEl.textContent = hrs > 0 ? `${hrs}:${String(mins).padStart(2,'0')}` : `0:${String(mins).padStart(2,'0')}`;
+
+  const distEl = document.getElementById('trip-distance');
+  if (distEl) distEl.textContent = tripDistanceMi.toFixed(1) + ' mi';
+
+  const usedEl = document.getElementById('trip-fuel-used');
+  if (usedEl) usedEl.textContent = tripFuelUsedGal.toFixed(1) + ' gal';
+
+  const avgEl = document.getElementById('trip-fuel-avg');
+  if (avgEl) avgEl.textContent = tripFuelUsedGal > 0.01 ? (tripDistanceMi / tripFuelUsedGal).toFixed(1) + ' mpg' : '0.0 mpg';
+
+  const rateEl = document.getElementById('trip-fuel-rate');
+  const speed = typeof simCurrentSpeed !== 'undefined' ? simCurrentSpeed : 0;
+  if (rateEl) rateEl.textContent = _tripFuelRate(speed).toFixed(1) + ' gph';
+}
+
+function _tripUpdateFuelGauge() {
+  const pct = Math.max(0, Math.round(tripFuelLevel));
+  const valEl = document.querySelector('.gauge-value');
+  const fills = document.querySelectorAll('.fuel-fill');
+  if (valEl && valEl.closest('.gauge') && valEl.closest('.gauge').querySelector('.fuel-fill')) {
+    valEl.innerHTML = pct + ' <span>%</span>';
+  }
+  fills.forEach(f => { f.style.width = pct + '%'; });
+}
+
+function tripReset() {
+  tripSeconds = 0;
+  tripDistanceMi = 0;
+  tripFuelUsedGal = 0;
+  _tripUpdateDisplay();
+}
+
+tripStart();
+
+function adjCenterTab(dir) {
+  centerTabPct = Math.max(0, Math.min(100, centerTabPct + dir));
+  const el = document.getElementById('center-tab-value');
+  if (el) el.textContent = centerTabPct;
+}
+
 let isMuted = false;
 let cruiseSpeed = 0.0;
 let cruiseAdjTimer = null;

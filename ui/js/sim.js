@@ -7,6 +7,7 @@ let simWS = null;
 let simThrottle = 0;
 let simActiveCodes = [];
 let simStoredCodes = [];
+let simCurrentSpeed = 0;
 let simLocalOverheatRunning = false;
 let simLocalOverheatInterval = null;
 let simLocalEtemp = null;
@@ -96,10 +97,18 @@ function simSendState() {
   const cruiseOn  = cruiseBtn && cruiseBtn.classList.contains('active');
   const cruiseSpd = typeof cruiseSpeed !== 'undefined' ? cruiseSpeed : 0;
 
+  let ballastTotal = 0;
+  if (typeof ballastState !== 'undefined' && typeof TANK_KEYS !== 'undefined') {
+    let sum = 0;
+    TANK_KEYS.forEach(k => { sum += (ballastState[k] || 0); });
+    ballastTotal = Math.round(sum / TANK_KEYS.length);
+  }
+
   const payload = {
-    throttle:    simThrottle,
-    cruise_on:   cruiseOn,
+    throttle:     simThrottle,
+    cruise_on:    cruiseOn,
     cruise_speed: cruiseSpd,
+    ballast_total: ballastTotal,
   };
   simWS.send(JSON.stringify(payload));
 
@@ -160,6 +169,7 @@ function simStartErrorSim() {
 
 function simUpdateUI(data) {
   const speed = data.speed;
+  simCurrentSpeed = speed;
   const rpm   = data.rpm;
 
   const speedValEl = document.querySelector('.speed-gauge .gauge-value');

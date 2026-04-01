@@ -1,6 +1,9 @@
 // ─── Ballast state ────────────────────────────────────────────────────────────
 
 const TANK_KEYS = ['bow', 'center', 'ramfillPort', 'ramfillStbd', 'portPnp', 'stbdPnp', 'transom'];
+const RAMFILL_KEYS = ['ramfillPort', 'ramfillStbd'];
+const RAMFILL_MIN_SPEED = 10;
+const RAMFILL_MAX_SPEED = 15;
 
 const TANK_NAME_TO_KEY = {
   'Bow':                'bow',
@@ -79,10 +82,50 @@ function ballastRender() {
 
 // ─── Tick: update filling/draining tanks ───────────────────────────────────────
 
+function _ramfillSpeedOk() {
+  const spd = typeof simCurrentSpeed !== 'undefined' ? simCurrentSpeed : 0;
+  return spd >= RAMFILL_MIN_SPEED && spd <= RAMFILL_MAX_SPEED;
+}
+
+function _ramfillActive() {
+  for (const k of RAMFILL_KEYS) {
+    if (ballastFilling.has(k) || ballastDraining.has(k)) return true;
+  }
+  return false;
+}
+
+function _ramfillUpdateStatus() {
+  const statusWrap = document.querySelector('.ramfill-status');
+  if (!statusWrap) return;
+
+  if (!_ramfillActive()) {
+    statusWrap.style.display = 'none';
+    return;
+  }
+
+  statusWrap.style.display = 'flex';
+  const textEl = statusWrap.querySelector('.status-text');
+  if (!textEl) return;
+
+  const spd = typeof simCurrentSpeed !== 'undefined' ? simCurrentSpeed : 0;
+  if (spd < RAMFILL_MIN_SPEED) {
+    textEl.textContent = 'increase speed';
+    textEl.style.color = '#c41e1e';
+  } else if (spd > RAMFILL_MAX_SPEED) {
+    textEl.textContent = 'decrease speed';
+    textEl.style.color = '#c41e1e';
+  } else {
+    textEl.textContent = 'okay';
+    textEl.style.color = '#2ecc40';
+  }
+}
+
 function ballastTick() {
   let changed = false;
+  const ramfillOk = _ramfillSpeedOk();
 
   ballastFilling.forEach(key => {
+    if (RAMFILL_KEYS.includes(key) && !ramfillOk) return;
     const target = ballastTargets[key] ?? 100;
     if (ballastState[key] < target) {
       const rate = ballastGetFillRate(key);
@@ -96,6 +139,7 @@ function ballastTick() {
   });
 
   ballastDraining.forEach(key => {
+    if (RAMFILL_KEYS.includes(key) && !ramfillOk) return;
     const target = ballastTargets[key] ?? 0;
     if (ballastState[key] > target) {
       const rate = ballastGetDrainRate(key);
@@ -108,6 +152,7 @@ function ballastTick() {
     }
   });
 
+  _ramfillUpdateStatus();
   if (changed) ballastRender();
   if (ballastFilling.size === 0 && ballastDraining.size === 0) ballastStopInterval();
 }
@@ -131,31 +176,38 @@ function ballastFill(key) {
   ballastDraining.delete(key);
   ballastFilling.add(key);
   ballastStartInterval();
+  _ramfillUpdateStatus();
 }
 
 function ballastDrain(key) {
   ballastFilling.delete(key);
   ballastDraining.add(key);
   ballastStartInterval();
+  _ramfillUpdateStatus();
 }
 
 function ballastStop(key) {
   ballastFilling.delete(key);
   ballastDraining.delete(key);
+  _ramfillUpdateStatus();
   if (ballastFilling.size === 0 && ballastDraining.size === 0) ballastStopInterval();
 }
 
 function ballastFillAll() {
+  _ballastResetSetAllBtn();
   TANK_KEYS.forEach(k => ballastFill(k));
 }
 
 function ballastDrainAll() {
+  _ballastResetSetAllBtn();
   TANK_KEYS.forEach(k => ballastDrain(k));
 }
 
 function ballastStopAll() {
+  _ballastResetSetAllBtn();
   ballastFilling.clear();
   ballastDraining.clear();
+  _ramfillUpdateStatus();
   ballastStopInterval();
 }
 
@@ -193,15 +245,182 @@ function ballastSetLevels(profileBallast) {
   ballastRender();
 }
 
+// ─── Set All To ──────────────────────────────────────────────────────────────
+
+let setAllValue = 0;
+let _setAllTimer = null;
+let _setAllInterval = null;
+let _setAllCount = 0;
+
+function ballastToggleSetAll() {
+  const panel = document.getElementById('set-all-panel');
+  if (!panel) return;
+  const opening = !panel.classList.contains('open');
+  panel.classList.toggle('open');
+  if (opening) {
+    const el = document.getElementById('set-all-pct');
+    if (el) el.textContent = setAllValue + '%';
+  }
+}
+
+function _ballastCloseSetAllPanel() {
+  const panel = document.getElementById('set-all-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+function ballastSetAllStart(dir) {
+  _setAllCount = 0;
+  _setAllDoAdj(dir);
+  _setAllTimer = setTimeout(() => {
+    _setAllInterval = setInterval(() => _setAllDoAdj(dir), 60);
+  }, 400);
+}
+
+function ballastSetAllStop() {
+  clearTimeout(_setAllTimer);
+  clearInterval(_setAllInterval);
+  _setAllTimer = null;
+  _setAllInterval = null;
+  _setAllCount = 0;
+}
+
+function _setAllDoAdj(dir) {
+  _setAllCount++;
+  const step = _setAllCount > 20 ? 5 : 1;
+  setAllValue = Math.max(0, Math.min(100, setAllValue + dir * step));
+  const el = document.getElementById('set-all-pct');
+  if (el) el.textContent = setAllValue + '%';
+}
+
+function ballastConfirmSetAll() {
+  _ballastCloseSetAllPanel();
+
+  const btn = document.getElementById('set-all-btn');
+  if (btn) {
+    btn.innerHTML = 'SET ALL TO<br>' + setAllValue + '%';
+    btn.classList.add('active');
+  }
+
+  TANK_KEYS.forEach(key => {
+    const current = ballastState[key] ?? 0;
+    ballastTargets[key] = setAllValue;
+    if (current < setAllValue) {
+      ballastDraining.delete(key);
+      ballastFilling.add(key);
+    } else if (current > setAllValue) {
+      ballastFilling.delete(key);
+      ballastDraining.add(key);
+    } else {
+      ballastFilling.delete(key);
+      ballastDraining.delete(key);
+    }
+  });
+  if (ballastFilling.size > 0 || ballastDraining.size > 0) ballastStartInterval();
+  ballastRender();
+}
+
+function _ballastResetSetAllBtn() {
+  const btn = document.getElementById('set-all-btn');
+  if (btn) {
+    btn.innerHTML = 'SET ALL TO';
+    btn.classList.remove('active');
+  }
+  _ballastCloseSetAllPanel();
+}
+
+// ─── Individual tank Set To ──────────────────────────────────────────────────
+
+let tankSetValue = 0;
+let _tankSetTimer = null;
+let _tankSetInterval = null;
+let _tankSetCount = 0;
+
+function tankToggleSetTo() {
+  const controls = document.getElementById('tank-set-controls');
+  if (!controls) return;
+  const el = document.getElementById('tank-set-pct');
+  if (el) el.textContent = tankSetValue + '%';
+  controls.classList.add('open');
+}
+
+function _tankCloseSetControls() {
+  const controls = document.getElementById('tank-set-controls');
+  if (controls) controls.classList.remove('open');
+}
+
+function tankSetToStart(dir) {
+  _tankSetCount = 0;
+  _tankSetDoAdj(dir);
+  _tankSetTimer = setTimeout(() => {
+    _tankSetInterval = setInterval(() => _tankSetDoAdj(dir), 60);
+  }, 400);
+}
+
+function tankSetToStop() {
+  clearTimeout(_tankSetTimer);
+  clearInterval(_tankSetInterval);
+  _tankSetTimer = null;
+  _tankSetInterval = null;
+  _tankSetCount = 0;
+}
+
+function _tankSetDoAdj(dir) {
+  _tankSetCount++;
+  const step = _tankSetCount > 20 ? 5 : 1;
+  tankSetValue = Math.max(0, Math.min(100, tankSetValue + dir * step));
+  const el = document.getElementById('tank-set-pct');
+  if (el) el.textContent = tankSetValue + '%';
+}
+
+function tankConfirmSetTo() {
+  _tankCloseSetControls();
+  if (!currentSelectedTank) return;
+
+  const key = TANK_NAME_TO_KEY[currentSelectedTank];
+  if (!key) return;
+
+  const btn = document.getElementById('tank-set-btn');
+  if (btn) {
+    btn.innerHTML = 'SET TO<br>' + tankSetValue + '%';
+    btn.classList.add('active');
+  }
+
+  const current = ballastState[key] ?? 0;
+  ballastTargets[key] = tankSetValue;
+  if (current < tankSetValue) {
+    ballastDraining.delete(key);
+    ballastFilling.add(key);
+  } else if (current > tankSetValue) {
+    ballastFilling.delete(key);
+    ballastDraining.add(key);
+  } else {
+    ballastFilling.delete(key);
+    ballastDraining.delete(key);
+  }
+  if (ballastFilling.size > 0 || ballastDraining.size > 0) ballastStartInterval();
+  ballastRender();
+}
+
+function _tankResetSetBtn() {
+  const btn = document.getElementById('tank-set-btn');
+  if (btn) {
+    btn.innerHTML = 'SET TO';
+    btn.classList.remove('active');
+  }
+  _tankCloseSetControls();
+}
+
 // ─── Panel button handlers ────────────────────────────────────────────────────
 
 function ballastOnFill() {
   if (!currentSelectedTank) return;
+  _tankResetSetBtn();
   const key = TANK_NAME_TO_KEY[currentSelectedTank];
   if (key) ballastFill(key);
 }
 
 function ballastOnStop() {
+  _tankResetSetBtn();
   if (currentSelectedTank) {
     const key = TANK_NAME_TO_KEY[currentSelectedTank];
     if (key) ballastStop(key);
@@ -212,6 +431,7 @@ function ballastOnStop() {
 
 function ballastOnDrain() {
   if (!currentSelectedTank) return;
+  _tankResetSetBtn();
   const key = TANK_NAME_TO_KEY[currentSelectedTank];
   if (key) ballastDrain(key);
 }
@@ -263,10 +483,14 @@ if (document.readyState === 'loading') {
 
 function selectTank(tankName, event) {
   event.stopPropagation();
+  _ballastCloseSetAllPanel();
 
   const boatWrapper = document.getElementById('boat-wrapper');
   const controlPanel = document.getElementById('tank-control-panel');
   const tankPanelName = document.getElementById('tank-panel-name');
+
+  document.querySelectorAll('.ballast').forEach(el => el.classList.remove('selected'));
+  _tankResetSetBtn();
 
   if (currentSelectedTank === tankName) {
     boatWrapper.classList.remove('shifted');
@@ -277,6 +501,11 @@ function selectTank(tankName, event) {
     tankPanelName.textContent = tankName;
     controlPanel.classList.add('active');
     currentSelectedTank = tankName;
+    const key = TANK_NAME_TO_KEY[tankName];
+    if (key) {
+      const tankEl = document.querySelector('.' + TANK_KEY_TO_ID[key]);
+      if (tankEl) tankEl.classList.add('selected');
+    }
   }
 }
 
@@ -284,6 +513,8 @@ function deselectTank() {
   const boatWrapper = document.getElementById('boat-wrapper');
   const controlPanel = document.getElementById('tank-control-panel');
 
+  document.querySelectorAll('.ballast').forEach(el => el.classList.remove('selected'));
+  _tankResetSetBtn();
   boatWrapper.classList.remove('shifted');
   controlPanel.classList.remove('active');
   currentSelectedTank = null;

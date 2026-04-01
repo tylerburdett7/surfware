@@ -55,6 +55,7 @@ def make_state():
         'etemp':        ETEMP_COLD_START,
         'cruise_on':    False,
         'cruise_speed': 0.0,
+        'ballast_total': 0,
         'codes':        [],
         'overheat_sim': False,
         'overheat_start_temp': None,
@@ -63,19 +64,36 @@ def make_state():
 def update_state(state):
     t = state['throttle'] / 100.0
 
-    # Speed & RPM (always computed)
-    raw_speed = round(pow(t, 1.15) * MAX_SPEED, 1)
-    raw_rpm   = round(IDLE_RPM + t * (MAX_RPM - IDLE_RPM))
-    if state['cruise_on'] and state['cruise_speed'] > 0 and raw_speed > state['cruise_speed']:
-        state['speed'] = state['cruise_speed']
+    target_speed = pow(t, 1.15) * MAX_SPEED
+    target_rpm = IDLE_RPM + t * (MAX_RPM - IDLE_RPM)
+
+    # Cruise control caps the target
+    if state['cruise_on'] and state['cruise_speed'] > 0 and target_speed > state['cruise_speed']:
+        target_speed = state['cruise_speed']
         capped_t = pow(state['cruise_speed'] / MAX_SPEED, 1.0 / 1.15)
-        state['rpm'] = round(IDLE_RPM + capped_t * (MAX_RPM - IDLE_RPM))
-    else:
-        state['speed'] = raw_speed
-        state['rpm'] = raw_rpm
+        target_rpm = IDLE_RPM + capped_t * (MAX_RPM - IDLE_RPM)
+
+    # Ballast weight slows acceleration (0% = 1.0x, 100% = 1.7x heavier)
+    ballast_pct = state.get('ballast_total', 0) / 100.0
+    weight_factor = 1.0 + ballast_pct * 0.7
+
+    # RPM responds faster than speed (engine revs before boat moves)
+    rpm_diff = target_rpm - state['rpm']
+    state['rpm'] = round(state['rpm'] + rpm_diff * 0.14)
+
+    # Speed ramps gradually toward target
+    speed_diff = target_speed - state['speed']
+    if speed_diff > 0:
+        accel = max(speed_diff * 0.04 / weight_factor, 0.02 / weight_factor)
+        state['speed'] = min(target_speed, state['speed'] + accel)
+    elif speed_diff < 0:
+        decel = max(abs(speed_diff) * 0.025, 0.03)
+        state['speed'] = max(target_speed, state['speed'] - decel)
+
+    state['speed'] = round(state['speed'], 1)
 
     # Oil pressure tracks RPM
-    rpm_ratio = (state['rpm'] - IDLE_RPM) / (MAX_RPM - IDLE_RPM)
+    rpm_ratio = max(0, (state['rpm'] - IDLE_RPM) / (MAX_RPM - IDLE_RPM))
     target_oil = OIL_IDLE_PSI + rpm_ratio * (OIL_MAX_PSI - OIL_IDLE_PSI)
     state['oil_psi'] = round(target_oil + random.uniform(-0.8, 0.8))
 
@@ -125,6 +143,8 @@ async def handler(websocket):
                 state['cruise_on'] = bool(data['cruise_on'])
             if 'cruise_speed' in data:
                 state['cruise_speed'] = float(data['cruise_speed'])
+            if 'ballast_total' in data:
+                state['ballast_total'] = max(0, min(100, float(data['ballast_total'])))
             if data.get('start_error_sim') == 'overheat':
                 state['overheat_sim'] = True
                 state['overheat_start_temp'] = state['etemp']
